@@ -9,7 +9,7 @@ lerna-debug.log*
 
 node_modules
 
-dist-ssr
+# dist-ssr
 *.local
 
 # Editor directories and files
@@ -32,8 +32,8 @@ dist-ssr
 .env.*
 
 # Build output
-/dist
-/dist-ssr
+# /dist
+# /dist-ssr
 /build
 /out
 
@@ -84,6 +84,6 @@ Desktop.ini
 *.bak
 
 # Built artifacts
-dist/
+# dist/
 build/
 
