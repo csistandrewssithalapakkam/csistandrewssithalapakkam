@@ -1,14 +1,89 @@
-*.tar
-*.tar.*
-*.jar
-*.exe
-*.msi
-*.deb
-*.zip
-*.tgz
+# Logs
+logs
 *.log
-*.log.*
-*.sig
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-pkg/
-src/
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# -----------------------------
+# Angular / Node / Vite ignores
+# -----------------------------
+
+# Environment files (may contain secrets)
+.env
+.env.*
+
+# Build output
+/dist
+/dist-ssr
+/build
+/out
+
+# Angular cache
+.angular
+.angular/cache
+
+# Vite cache
+.vite
+.vite/*
+
+# Temporary files
+.cache
+.parcel-cache
+.turbo
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# esbuild binary artifacts (sometimes downloaded during install)
+node_modules/@esbuild
+
+# IDE/project files
+.history
+.idea
+.vscode/*
+!/.vscode/extensions.json
+
+# Testing
+/coverage
+
+# Logs and lockfiles
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Misc
+.DS_Store
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Built artifacts
+dist/
+build/
+
