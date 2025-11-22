@@ -1,0 +1,95 @@
+<!-- Life Milestones Section -->
+<section class="py-20 bg-light-blue-bg">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold font-serif text-black">
+      Celebrating Life's Milestones
+    </h2>
+    <p class="mt-2 text-black">
+      Join us in celebrating the special moments within our church family.
+    </p>
+    <div class="mt-12 grid md:grid-cols-2 gap-12">
+      <!-- Birthdays Card -->
+      <div
+        class="bg-white rounded-xl shadow-lg p-10 flex flex-col items-center justify-center text-center relative overflow-hidden border-t-4 border-warm-gold"
+      >
+        <h3 class="text-2xl font-bold text-black">
+          This Week's Birthdays
+        </h3>
+        <div class="mt-6 w-full min-h-[150px] flex items-center justify-center">
+          @if (birthdays().length > 0) { 
+            @for (bday of birthdays(); track bday.name; let i = $index) {
+              <div
+                class="absolute transition-opacity duration-500 w-full px-8"
+                [class.opacity-100]="currentBirthdayIndex() === i"
+                [class.opacity-0]="currentBirthdayIndex() !== i"
+              >
+                <p class="text-xl font-semibold text-black">{{ bday.name }}</p>
+                <p class="text-black">{{ bday.date }}</p>
+                <hr class="my-4 border-gray-200" />
+                <blockquote class="text-black italic font-serif">
+                  "{{ bday.quote }}"
+                </blockquote>
+                <p class="mt-2 text-warm-gold font-semibold">{{ bday.reference }}</p>
+              </div>
+            }
+          } @else {
+            <p>No birthdays this week.</p>
+          }
+        </div>
+        <button
+          (click)="prevMilestone('birthday')"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button
+          (click)="nextMilestone('birthday')"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+      <!-- Anniversaries Card -->
+      <div
+        class="bg-white rounded-xl shadow-lg p-10 flex flex-col items-center justify-center text-center relative overflow-hidden border-t-4 border-warm-gold"
+      >
+        <h3 class="text-2xl font-bold text-black">
+          This Week's Anniversaries
+        </h3>
+        <div class="mt-6 w-full min-h-[150px] flex items-center justify-center">
+          @if (anniversaries().length > 0) { 
+            @for (ann of anniversaries(); track ann.name; let i = $index) {
+              <div
+                class="absolute transition-opacity duration-500 w-full px-8"
+                [class.opacity-100]="currentAnniversaryIndex() === i"
+                [class.opacity-0]="currentAnniversaryIndex() !== i"
+              >
+                <p class="text-xl font-semibold text-black">{{ ann.name }}</p>
+                <p class="text-black">{{ ann.date }}</p>
+                <hr class="my-4 border-gray-200" />
+                <blockquote class="text-black italic font-serif">
+                  "{{ ann.quote }}"
+                </blockquote>
+                <p class="mt-2 text-warm-gold font-semibold">{{ ann.reference }}</p>
+              </div>
+            }
+          } @else {
+            <p>No anniversaries this week.</p>
+          }
+        </div>
+        <button
+          (click)="prevMilestone('anniversary')"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button
+          (click)="nextMilestone('anniversary')"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

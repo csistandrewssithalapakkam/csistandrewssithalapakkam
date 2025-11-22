@@ -1,0 +1,54 @@
+<!-- Header -->
+<header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+  <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-black font-serif">St. Andrew's Church</h1>
+    <div class="hidden md:flex space-x-8 items-center text-black font-medium">
+      <a href="#home" class="hover:text-accent-blue transition-colors">Home</a>
+      <a href="#events" class="hover:text-accent-blue transition-colors">Events</a>
+      <a href="#messages" class="hover:text-accent-blue transition-colors">Messages</a>
+      <a href="#gallery" class="hover:text-accent-blue transition-colors">Gallery</a>
+      <a href="#missions" class="hover:text-accent-blue transition-colors">Missions</a>
+      <a href="#prayer" class="hover:text-accent-blue transition-colors">Prayer</a>
+      <a href="#visit" class="hover:text-accent-blue transition-colors">Visit Us</a>
+    </div>
+    <button (click)="toggleMobileMenu()" class="md:hidden text-black">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        @if (!isMobileMenuOpen()) {
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+        } @else {
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+        }
+      </svg>
+    </button>
+  </nav>
+  <!-- Mobile Menu -->
+  @if (isMobileMenuOpen()) {
+  <div
+    class="md:hidden bg-white/95 backdrop-blur-md shadow-lg absolute w-full left-0"
+  >
+    <a href="#home" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Home</a>
+    <a href="#events" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Events</a>
+    <a href="#messages" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Messages</a>
+    <a href="#gallery" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Gallery</a>
+    <a href="#missions" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Missions</a>
+    <a href="#prayer" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Prayer</a>
+    <a href="#visit" (click)="toggleMobileMenu()" class="block py-3 px-6 text-black hover:bg-gray-100 transition-colors">Visit Us</a>
+  </div>
+  }
+</header>

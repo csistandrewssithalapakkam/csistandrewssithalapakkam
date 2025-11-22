@@ -1,0 +1,34 @@
+<!-- Recent Messages Section -->
+<section id="messages" class="py-20 bg-light-blue-bg">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold font-serif text-black">
+      Recent Messages
+    </h2>
+    <p class="mt-2 text-black">
+      Catch up on our latest sermons and teachings.
+    </p>
+    <div class="mt-12 grid md:grid-cols-3 gap-8">
+      @for (message of recentMessages; track message.title) {
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden text-left group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+        <div class="overflow-hidden">
+          <img
+            [ngSrc]="message.image"
+            alt="{{ message.title }}"
+            class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            width="600"
+            height="400"
+          />
+        </div>
+        <div class="p-6">
+          <h3
+            class="text-xl font-bold text-black group-hover:text-accent-blue transition-colors"
+          >
+            {{ message.title }}
+          </h3>
+          <p class="mt-1 text-black">{{ message.author }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>

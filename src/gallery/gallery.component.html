@@ -1,0 +1,24 @@
+<!-- Photo Gallery Section -->
+<section id="gallery" class="py-20 bg-white">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold font-serif text-black">
+      Photo Gallery
+    </h2>
+    <p class="mt-2 text-black">
+      Moments from our church life and community.
+    </p>
+    <div class="mt-12 columns-2 md:columns-3 gap-4">
+      @for (image of galleryImages(); track image) {
+      <div class="mb-4 break-inside-avoid overflow-hidden rounded-lg shadow-md">
+        <img
+          class="w-full h-auto transition-transform duration-300 ease-in-out hover:scale-110"
+          [ngSrc]="image"
+          alt="Church gallery image"
+          width="800"
+          height="600"
+        />
+      </div>
+      }
+    </div>
+  </div>
+</section>

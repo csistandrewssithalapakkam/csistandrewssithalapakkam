@@ -1,0 +1,16 @@
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./main/main.component').then(m => m.MainComponent),
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  }
+];
