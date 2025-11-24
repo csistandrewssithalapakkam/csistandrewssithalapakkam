@@ -1,0 +1,54 @@
+<section class="bg-white p-8 rounded-lg shadow">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Manage Banner Images</h2>
+
+  <!-- Add Photo Form -->
+  <form [formGroup]="addImageForm" (ngSubmit)="addPhoto()" class="mb-8 p-6 border rounded-lg bg-gray-50">
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">Add a New Banner Image</h3>
+    <div class="flex flex-col sm:flex-row gap-4 items-start">
+      <div class="flex-grow w-full">
+        <label for="imageUrl" class="sr-only">Image URL</label>
+        <input 
+          id="imageUrl" 
+          type="url" 
+          formControlName="imageUrl" 
+          placeholder="https://example.com/image.jpg" 
+          class="w-full px-4 py-2 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 rounded-md focus:ring-accent-blue focus:border-accent-blue" 
+          [class.border-red-500]="addImageForm.controls.imageUrl.invalid && addImageForm.controls.imageUrl.touched"
+        />
+        @if(addImageForm.controls.imageUrl.invalid && addImageForm.controls.imageUrl.touched) {
+          <p class="text-sm text-red-500 mt-1">Please enter a valid image URL.</p>
+        }
+      </div>
+      <button 
+        type="submit" 
+        [disabled]="addImageForm.invalid" 
+        class="w-full sm:w-auto px-6 py-2 bg-primary-blue text-white font-semibold rounded-md hover:bg-accent-blue transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        Add Image
+      </button>
+    </div>
+  </form>
+
+  <!-- Gallery Preview -->
+  <div>
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">Current Banner Images</h3>
+    @if (heroImagesService.heroImages().length > 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (image of heroImagesService.heroImages(); track image) {
+      <div class="relative group overflow-hidden rounded-lg shadow-md aspect-w-16 aspect-h-9">
+        <img [ngSrc]="image" alt="Banner image" class="w-full h-full object-cover" width="640" height="360" />
+        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <button (click)="removePhoto(image)" class="text-white p-2 rounded-full hover:bg-red-500/80 transition-colors" aria-label="Delete image">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+    <p class="text-gray-500">No banner images found. Add an image using the form above.</p>
+    }
+  </div>
+</section>

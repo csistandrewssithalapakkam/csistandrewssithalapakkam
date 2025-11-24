@@ -1,0 +1,94 @@
+<section class="bg-white p-8 rounded-lg shadow">
+  <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+    <h2 class="text-2xl font-bold text-gray-800">Manage Missionary Spotlight</h2>
+    <button (click)="openModal()" class="px-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition-colors flex items-center gap-2 self-start sm:self-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      Add Story
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="mb-6 flex justify-start items-center gap-2">
+      <span class="font-semibold text-gray-700">Show:</span>
+      <button (click)="filter.set('all')" [class.bg-primary-blue]="filter() === 'all'" [class.text-white]="filter() === 'all'" [class.bg-gray-200]="filter() !== 'all'" class="px-3 py-1 text-sm rounded-full transition-colors">All</button>
+      <button (click)="filter.set('unmapped')" [class.bg-primary-blue]="filter() === 'unmapped'" [class.text-white]="filter() === 'unmapped'" [class.bg-gray-200]="filter() !== 'unmapped'" class="px-3 py-1 text-sm rounded-full transition-colors">Unmapped</button>
+      <button (click)="filter.set('mapped')" [class.bg-primary-blue]="filter() === 'mapped'" [class.text-white]="filter() === 'mapped'" [class.bg-gray-200]="filter() !== 'mapped'" class="px-3 py-1 text-sm rounded-full transition-colors">Mapped</button>
+  </div>
+
+
+  <!-- Stories List -->
+  <div class="space-y-4">
+    @for(story of filteredStories(); track story.id) {
+      <div class="bg-gray-50 border rounded-lg p-4 flex flex-col md:flex-row gap-4">
+        <img [ngSrc]="story.imageUrl || 'https://picsum.photos/150/150?grayscale'" [alt]="story.title" width="150" height="150" class="w-full md:w-36 h-36 object-cover rounded-md flex-shrink-0">
+        <div class="flex-grow">
+          <div class="flex justify-between items-start">
+            <h3 class="text-lg font-bold text-gray-800">{{ story.title }}</h3>
+            @if(story.mappedMonth !== undefined && story.mappedMonth !== null) {
+              <span class="text-xs font-semibold bg-green-200 text-green-800 px-2 py-1 rounded-full">{{ months[story.mappedMonth] }}</span>
+            } @else {
+               <span class="text-xs font-semibold bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">Unmapped</span>
+            }
+          </div>
+          <p class="text-sm text-gray-600 mt-2 line-clamp-3">{{ story.shortStory }}</p>
+        </div>
+      </div>
+    } @empty {
+      <div class="text-center py-8 px-4 border-2 border-dashed rounded-lg">
+        <p class="text-gray-500">No missionary stories found. Add one to get started!</p>
+      </div>
+    }
+  </div>
+
+</section>
+
+<!-- Add/Edit Story Modal -->
+@if (isModalVisible()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" (click)="closeModal()">
+  <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl m-4" (click)="$event.stopPropagation()">
+    <form [formGroup]="storyForm" (ngSubmit)="saveStory()">
+      <div class="p-6 border-b">
+        <h3 class="text-xl font-bold font-serif text-gray-800">Add New Missionary Story</h3>
+      </div>
+      <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700">Name (Title)</label>
+          <input id="title" type="text" formControlName="title" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue" required>
+        </div>
+        <div>
+          <label for="imageUrl" class="block text-sm font-medium text-gray-700">Missionary Image URL (Optional)</label>
+          <input id="imageUrl" type="url" formControlName="imageUrl" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+        </div>
+         <div>
+          <label for="shortStory" class="block text-sm font-medium text-gray-700">Short Story (Max 1000 characters)</label>
+          <textarea id="shortStory" formControlName="shortStory" rows="5" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue" required></textarea>
+        </div>
+        <div>
+          <label for="detailedStory" class="block text-sm font-medium text-gray-700">Detailed Story (Optional)</label>
+          <textarea id="detailedStory" formControlName="detailedStory" rows="8" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue"></textarea>
+           <p class="text-xs text-gray-500 mt-1">You can separate paragraphs by pressing Enter.</p>
+        </div>
+         <div>
+          <label for="mappedMonth" class="block text-sm font-medium text-gray-700">Map to Month (Optional)</label>
+          <select id="mappedMonth" formControlName="mappedMonth" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+            <option value="">None</option>
+            @for(month of months; track month; let i = $index) {
+              <option [value]="i">{{ month }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="p-6 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
+          Cancel
+        </button>
+        <button type="submit" [disabled]="storyForm.invalid" class="px-4 py-2 bg-primary-blue text-white rounded-md hover:bg-accent-blue transition-colors disabled:bg-gray-400">
+          Save Story
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}

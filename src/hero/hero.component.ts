@@ -1,24 +1,24 @@
-import { Component, ChangeDetectionStrategy, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, OnInit, OnDestroy, inject } from '@angular/core';
+import { HeroImagesService } from './hero-images.service';
 
 @Component({
   selector: 'app-hero',
+  imports: [],
   templateUrl: './hero.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroComponent implements OnInit, OnDestroy {
-  heroImages = signal([
-    'https://picsum.photos/1920/1080?random=church',
-    'https://picsum.photos/1920/1080?random=community',
-    'https://picsum.photos/1920/1080?random=sunrise',
-    'https://picsum.photos/1920/1080?random=nature',
-  ]);
+  private heroImagesService = inject(HeroImagesService);
+  heroImages = this.heroImagesService.heroImages;
   currentHeroImageIndex = signal(0);
-  private intervalId: any;
+  private intervalId?: ReturnType<typeof setInterval>;
 
   ngOnInit() {
-    this.intervalId = setInterval(() => {
-      this.nextImage();
-    }, 5000);
+    if (this.heroImages().length > 0) {
+      this.intervalId = setInterval(() => {
+        this.nextImage();
+      }, 5000);
+    }
   }
 
   ngOnDestroy() {
@@ -28,14 +28,25 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   nextImage() {
-    this.currentHeroImageIndex.update((i) => (i + 1) % this.heroImages().length);
+    if (this.heroImages().length === 0) return;
+    this.currentHeroImageIndex.update(
+      (i) => (i + 1) % this.heroImages().length
+    );
   }
 
   prevImage() {
-    this.currentHeroImageIndex.update((i) => (i - 1 + this.heroImages().length) % this.heroImages().length);
+    if (this.heroImages().length === 0) return;
+    this.currentHeroImageIndex.update(
+      (i) => (i - 1 + this.heroImages().length) % this.heroImages().length
+    );
   }
 
   selectImage(index: number) {
     this.currentHeroImageIndex.set(index);
+  }
+
+  scrollTo(sectionId: string, event: Event) {
+    event.preventDefault();
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   }
 }

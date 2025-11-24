@@ -1,1 +1,5 @@
-<router-outlet></router-outlet>
+@if (bypassService.isUnlocked()) {
+  <router-outlet></router-outlet>
+} @else {
+  <app-coming-soon></app-coming-soon>
+}

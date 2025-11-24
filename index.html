@@ -2,21 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>CSI St.Andrew's - Sithalapakkam</title>
+  <title>Andrew's church TNHB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Bootstrap CSS for utility classes and responsive ordering -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQpeoYz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            'primary-blue': '#1E40AF', /* blue-900 */
-            'accent-blue': '#3B82F6', /* blue-500 */
-            'light-blue-bg': '#F8FAFC', /* slate-50 */
-            'dark-blue-bg': '#1E3A5F',
+            'primary-blue': '#0ea5e9', /* sky-500 */
+            'accent-blue': '#38bdf8', /* sky-400 */
+            'light-blue-bg': '#f0f9ff', /* sky-50 */
+            'dark-blue-bg': '#0c4a6e', /* sky-900 */
             'warm-gold': '#B48A5E',
           },
           fontFamily: {
@@ -58,13 +56,14 @@
     "@angular/core": "https://next.esm.sh/@angular/core@^20.3.10?external=rxjs",
     "@angular/common": "https://next.esm.sh/@angular/common@^20.3.10?external=rxjs",
     "@angular/router": "https://next.esm.sh/@angular/router@^20.3.10?external=rxjs",
-    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.10?external=rxjs"
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.10?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^21.0.0/http?external=rxjs"
   }
 }
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-<body class="bg-gray-100 font-sans text-black">
+<body class="bg-light-blue-bg font-sans text-black">
   <app-root></app-root>
 </body>
 </html>

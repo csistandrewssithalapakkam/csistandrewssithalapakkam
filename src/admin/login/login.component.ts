@@ -13,9 +13,7 @@ import { AuthService } from '../auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  // Fix: Add explicit type for injected service.
   private fb: FormBuilder = inject(FormBuilder);
-  // Fix: Add explicit type for injected service.
   private authService: AuthService = inject(AuthService);
 
   hasError = signal(false);

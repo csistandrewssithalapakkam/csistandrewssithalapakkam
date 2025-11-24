@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   isAuthenticated = signal<boolean>(false);
-  // Fix: Add explicit type for injected service.
   private router: Router = inject(Router);
 
   login(username: string, password: string):boolean {

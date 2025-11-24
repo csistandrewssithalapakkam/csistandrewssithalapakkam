@@ -5,13 +5,14 @@
       Missionary Spotlight
     </h2>
     <p class="mt-2 text-black">Supporting those who serve in the field.</p>
+    @if(spotlightStory(); as story) {
     <div
       class="mt-12 max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 flex flex-col md:flex-row items-center gap-8 text-left"
     >
       <div class="md:w-1/3 flex-shrink-0">
         <img
-          ngSrc="https://picsum.photos/400/400?grayscale&random=missionary"
-          alt="Sadhu Sundar Singh"
+          [ngSrc]="story.imageUrl || 'https://picsum.photos/400/400?grayscale&random=missionary'"
+          [alt]="story.title"
           class="rounded-lg shadow-md w-full"
           width="400"
           height="400"
@@ -19,23 +20,71 @@
       </div>
       <div class="md:w-2/3">
         <h3 class="text-2xl font-bold text-black font-serif">
-          Sadhu Sundar Singh (1889 - c. 1929)
+          {{ story.title }}
         </h3>
         <p class="mt-4 text-black leading-relaxed">
-          An Indian Christian missionary who modeled his life on the sadhus
-          (holy men) of his culture. Once a devout Sikh, Sundar Singh
-          converted to Christianity and traveled extensively across the Indian
-          subcontinent and Tibet, barefoot and in a saffron robe, sharing the
-          message of Jesus. Renowned for his deep spiritual life and unwavering
-          faith in the face of persecution, his legacy continues to inspire
-          countless people around the world.
+         {{ story.shortStory }}
         </p>
+        @if(story.detailedStory) {
         <button
+          (click)="openPopup()"
           class="mt-6 bg-primary-blue text-white font-bold py-3 px-8 rounded-full hover:bg-accent-blue transition-colors duration-300 shadow-lg"
         >
           Learn More About His Legacy
         </button>
+        }
       </div>
     </div>
+    } @else {
+      <div class="mt-12 max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 text-center">
+        <p class="text-gray-600">No missionary story to display for this month. Please check back later.</p>
+      </div>
+    }
   </div>
 </section>
+
+<!-- Popup Modal -->
+@if (isPopupVisible() && spotlightStory(); as story) {
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in"
+  (click)="closePopup()"
+>
+  <div
+    class="bg-white rounded-lg shadow-2xl max-w-2xl w-full m-4 p-8 relative"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      (click)="closePopup()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors"
+      aria-label="Close popup"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+    <h3 class="text-2xl font-bold font-serif text-black mb-4">
+      The Legacy of {{ story.title }}
+    </h3>
+    <div
+      class="text-left text-black space-y-4 max-h-[60vh] overflow-y-auto pr-4"
+    >
+      @for(paragraph of story.detailedStory?.split('\n'); track paragraph) {
+        @if(paragraph.trim()) {
+         <p>{{ paragraph }}</p>
+        }
+      }
+    </div>
+  </div>
+</div>
+}

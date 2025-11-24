@@ -7,6 +7,7 @@
     <p class="mt-2 text-black">
       Join us in celebrating the special moments within our church family.
     </p>
+
     <div class="mt-12 grid md:grid-cols-2 gap-12">
       <!-- Birthdays Card -->
       <div
@@ -15,7 +16,7 @@
         <h3 class="text-2xl font-bold text-black">
           This Week's Birthdays
         </h3>
-        <div class="mt-6 w-full min-h-[150px] flex items-center justify-center">
+        <div class="mt-6 w-full min-h-[380px] flex items-center justify-center">
           @if (birthdays().length > 0) { 
             @for (bday of birthdays(); track bday.name; let i = $index) {
               <div
@@ -26,10 +27,21 @@
                 <p class="text-xl font-semibold text-black">{{ bday.name }}</p>
                 <p class="text-black">{{ bday.date }}</p>
                 <hr class="my-4 border-gray-200" />
-                <blockquote class="text-black italic font-serif">
-                  "{{ bday.quote }}"
-                </blockquote>
-                <p class="mt-2 text-warm-gold font-semibold">{{ bday.reference }}</p>
+
+                @if(displayLanguage() === 'english' || displayLanguage() === 'both') {
+                  <blockquote class="text-black italic font-serif">
+                    {{ bday.quote }}
+                  </blockquote>
+                  <p class="mt-2 text-warm-gold font-semibold">{{ bday.reference }}</p>
+                }
+                @if(displayLanguage() === 'tamil' || displayLanguage() === 'both') {
+                  <div [class.mt-4]="displayLanguage() === 'both'">
+                    <blockquote class="text-black italic font-serif">
+                      {{ bday.quoteTamil }}
+                    </blockquote>
+                    <p class="mt-2 text-warm-gold font-semibold">{{ bday.referenceTamil }}</p>
+                  </div>
+                }
               </div>
             }
           } @else {
@@ -56,7 +68,7 @@
         <h3 class="text-2xl font-bold text-black">
           This Week's Anniversaries
         </h3>
-        <div class="mt-6 w-full min-h-[150px] flex items-center justify-center">
+        <div class="mt-6 w-full min-h-[380px] flex items-center justify-center">
           @if (anniversaries().length > 0) { 
             @for (ann of anniversaries(); track ann.name; let i = $index) {
               <div
@@ -67,10 +79,21 @@
                 <p class="text-xl font-semibold text-black">{{ ann.name }}</p>
                 <p class="text-black">{{ ann.date }}</p>
                 <hr class="my-4 border-gray-200" />
-                <blockquote class="text-black italic font-serif">
-                  "{{ ann.quote }}"
-                </blockquote>
-                <p class="mt-2 text-warm-gold font-semibold">{{ ann.reference }}</p>
+
+                @if(displayLanguage() === 'english' || displayLanguage() === 'both') {
+                  <blockquote class="text-black italic font-serif">
+                    {{ ann.quote }}
+                  </blockquote>
+                  <p class="mt-2 text-warm-gold font-semibold">{{ ann.reference }}</p>
+                }
+                @if(displayLanguage() === 'tamil' || displayLanguage() === 'both') {
+                  <div [class.mt-4]="displayLanguage() === 'both'">
+                    <blockquote class="text-black italic font-serif">
+                      {{ ann.quoteTamil }}
+                    </blockquote>
+                    <p class="mt-2 text-warm-gold font-semibold">{{ ann.referenceTamil }}</p>
+                  </div>
+                }
               </div>
             }
           } @else {

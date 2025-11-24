@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { HeroComponent } from '../hero/hero.component';
-import { DailyVerseComponent } from '../daily-verse/daily-verse.component';
 import { MilestonesComponent } from '../milestones/milestones.component';
 import { EventsComponent } from '../events/events.component';
 import { MessagesComponent } from '../messages/messages.component';
@@ -16,7 +15,6 @@ import { FooterComponent } from '../footer/footer.component';
   imports: [
     HeaderComponent,
     HeroComponent,
-    DailyVerseComponent,
     MilestonesComponent,
     EventsComponent,
     MessagesComponent,

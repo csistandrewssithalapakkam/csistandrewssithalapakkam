@@ -12,10 +12,10 @@
       <div>
         <h3 class="text-xl font-bold text-white">Quick Links</h3>
         <ul class="mt-2 space-y-1 text-gray-300">
-          <li><a href="#home" class="hover:text-white">Home</a></li>
-          <li><a href="#events" class="hover:text-white">Events</a></li>
-          <li><a href="#messages" class="hover:text-white">Messages</a></li>
-          <li><a href="/#/admin" class="hover:text-white">Admin Login</a></li>
+          <li><a href="#home" (click)="scrollTo('home', $event)" class="hover:text-white cursor-pointer">Home</a></li>
+          <li><a href="#events" (click)="scrollTo('events', $event)" class="hover:text-white cursor-pointer">Events</a></li>
+          <li><a href="#messages" (click)="scrollTo('messages', $event)" class="hover:text-white cursor-pointer">Messages</a></li>
+          <li><a routerLink="/admin" class="hover:text-white cursor-pointer">Admin Login</a></li>
         </ul>
       </div>
       <div>

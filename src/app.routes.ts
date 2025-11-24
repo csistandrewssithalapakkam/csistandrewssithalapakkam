@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
   },
   {
+    path: 'gallery',
+    loadComponent: () => import('./gallery-page/gallery-page.component').then(m => m.GalleryPageComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   }
