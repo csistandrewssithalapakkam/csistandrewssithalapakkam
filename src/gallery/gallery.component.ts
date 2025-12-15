@@ -1,12 +1,11 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { GalleryService, GalleryCategory } from './gallery.service';
 import { ImagePreviewComponent } from '../image-preview/image-preview.component';
 
 @Component({
   selector: 'app-gallery',
-  imports: [NgOptimizedImage, RouterLink, ImagePreviewComponent],
+  imports: [RouterLink, ImagePreviewComponent],
   templateUrl: './gallery.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

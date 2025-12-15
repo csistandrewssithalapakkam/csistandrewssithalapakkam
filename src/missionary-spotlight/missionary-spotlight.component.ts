@@ -1,16 +1,16 @@
 import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 import { MissionaryService } from './missionary.service';
 
 @Component({
   selector: 'app-missionary-spotlight',
-  imports: [NgOptimizedImage],
+  imports: [],
   templateUrl: './missionary-spotlight.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionarySpotlightComponent {
   private missionaryService = inject(MissionaryService);
   isPopupVisible = signal(false);
+  currentLanguage = signal<'english' | 'tamil'>('english');
 
   spotlightStory = computed(() => {
     const stories = this.missionaryService.stories();
@@ -32,8 +32,12 @@ export class MissionarySpotlightComponent {
     return stories.length > 0 ? stories[0] : null;
   });
 
+  setLanguage(lang: 'english' | 'tamil') {
+    this.currentLanguage.set(lang);
+  }
+
   openPopup(): void {
-    if (this.spotlightStory()?.detailedStory) {
+    if (this.spotlightStory()?.detailedStory || this.spotlightStory()?.detailedStoryTamil) {
       this.isPopupVisible.set(true);
     }
   }

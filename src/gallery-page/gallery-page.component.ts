@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { GalleryService, GalleryCategory } from '../gallery/gallery.service';
 import { HeaderComponent } from '../header/header.component';
@@ -11,7 +11,6 @@ import { ImagePreviewComponent } from '../image-preview/image-preview.component'
   imports: [
     CommonModule,
     RouterLink,
-    NgOptimizedImage,
     HeaderComponent,
     FooterComponent,
     ImagePreviewComponent,

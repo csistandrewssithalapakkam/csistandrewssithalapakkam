@@ -1,23 +1,23 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { EventsService, ChurchEvent } from '../../events/events.service';
+import { ImagePreviewComponent } from '../../image-preview/image-preview.component';
 
 @Component({
   selector: 'app-event-manager',
-  imports: [ReactiveFormsModule, DatePipe, NgOptimizedImage],
+  imports: [ReactiveFormsModule, DatePipe, ImagePreviewComponent],
   templateUrl: './event-manager.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventManagerComponent {
-  private fb = inject(FormBuilder);
+  private fb: FormBuilder = inject(FormBuilder);
   eventsService = inject(EventsService);
 
   isModalVisible = signal(false);
   editingEvent = signal<ChurchEvent | null>(null);
+  selectedImageForPreview = signal<{ images: string[]; index: number } | null>(null);
   
-  private today = new Date();
-
   eventForm = this.fb.group({
     title: ['', Validators.required],
     date: ['', Validators.required],
@@ -26,16 +26,18 @@ export class EventManagerComponent {
   });
   
   upcomingEvents = computed(() => {
-    this.today.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     return this.eventsService.events()
-      .filter(event => new Date(event.date) >= this.today)
+      .filter(event => new Date(event.date) >= today)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   });
 
   pastEvents = computed(() => {
-    this.today.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     return this.eventsService.events()
-      .filter(event => new Date(event.date) < this.today)
+      .filter(event => new Date(event.date) < today)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   });
 
@@ -85,5 +87,21 @@ export class EventManagerComponent {
     if (confirm('Are you sure you want to delete this event?')) {
       this.eventsService.deleteEvent(id);
     }
+  }
+
+  openImagePreview(clickedEvent: ChurchEvent, eventList: ChurchEvent[]) {
+    if (!clickedEvent.image) return;
+    
+    const imagesWithUrls = eventList.filter(e => e.image);
+    const images = imagesWithUrls.map(e => e.image!);
+    const index = imagesWithUrls.findIndex(e => e.id === clickedEvent.id);
+
+    if (index > -1) {
+      this.selectedImageForPreview.set({ images, index });
+    }
+  }
+
+  closeImagePreview() {
+    this.selectedImageForPreview.set(null);
   }
 }

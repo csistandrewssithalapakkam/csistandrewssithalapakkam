@@ -10,7 +10,7 @@ import { PrayerRequestService, PrayerRequest } from '../../prayer-request/prayer
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrayerManagerComponent {
-  private fb = inject(FormBuilder);
+  private fb: FormBuilder = inject(FormBuilder);
   prayerRequestService = inject(PrayerRequestService);
 
   viewMode = signal<'active' | 'archived'>('active');

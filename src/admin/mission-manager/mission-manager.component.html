@@ -22,7 +22,7 @@
   <div class="space-y-4">
     @for(story of filteredStories(); track story.id) {
       <div class="bg-gray-50 border rounded-lg p-4 flex flex-col md:flex-row gap-4">
-        <img [ngSrc]="story.imageUrl || 'https://picsum.photos/150/150?grayscale'" [alt]="story.title" width="150" height="150" class="w-full md:w-36 h-36 object-cover rounded-md flex-shrink-0">
+        <img [src]="story.imageUrl || 'https://picsum.photos/150/150?grayscale'" [alt]="story.title" class="w-full md:w-36 h-36 object-cover rounded-md flex-shrink-0">
         <div class="flex-grow">
           <div class="flex justify-between items-start">
             <h3 class="text-lg font-bold text-gray-800">{{ story.title }}</h3>

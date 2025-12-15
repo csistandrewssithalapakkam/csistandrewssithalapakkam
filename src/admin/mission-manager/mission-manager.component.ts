@@ -1,16 +1,15 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgOptimizedImage } from '@angular/common';
 import { MissionaryService } from '../../missionary-spotlight/missionary.service';
 
 @Component({
   selector: 'app-mission-manager',
-  imports: [ReactiveFormsModule, NgOptimizedImage],
+  imports: [ReactiveFormsModule],
   templateUrl: './mission-manager.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionManagerComponent {
-  private fb = inject(FormBuilder);
+  private fb: FormBuilder = inject(FormBuilder);
   missionaryService = inject(MissionaryService);
 
   isModalVisible = signal(false);

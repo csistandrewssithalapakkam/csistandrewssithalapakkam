@@ -5,27 +5,63 @@
       Missionary Spotlight
     </h2>
     <p class="mt-2 text-black">Supporting those who serve in the field.</p>
+    
     @if(spotlightStory(); as story) {
     <div
       class="mt-12 max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 flex flex-col md:flex-row items-center gap-8 text-left"
     >
       <div class="md:w-1/3 flex-shrink-0">
         <img
-          [ngSrc]="story.imageUrl || 'https://picsum.photos/400/400?grayscale&random=missionary'"
+          [src]="story.imageUrl || 'https://picsum.photos/400/400?grayscale&random=missionary'"
           [alt]="story.title"
           class="rounded-lg shadow-md w-full"
-          width="400"
-          height="400"
         />
       </div>
       <div class="md:w-2/3">
-        <h3 class="text-2xl font-bold text-black font-serif">
-          {{ story.title }}
-        </h3>
-        <p class="mt-4 text-black leading-relaxed">
-         {{ story.shortStory }}
-        </p>
-        @if(story.detailedStory) {
+         <div class="flex justify-between items-start mb-4">
+            <h3 class="text-2xl font-bold text-black font-serif pr-4">
+              @if (currentLanguage() === 'english') {
+                <span>{{ story.title }}</span>
+              } @else {
+                <span>{{ story.titleTamil || story.title }}</span>
+              }
+            </h3>
+            <!-- Language Toggle -->
+            <div class="relative flex w-40 p-1 bg-gray-200 rounded-full flex-shrink-0">
+              <div class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"
+                  [class.translate-x-full]="currentLanguage() === 'tamil'"></div>
+              <button
+                type="button"
+                (click)="setLanguage('english')"
+                class="relative z-10 flex-1 py-1 text-xs font-medium transition-colors duration-300 rounded-full"
+                [class.text-primary-blue]="currentLanguage() === 'english'"
+                [class.text-gray-500]="currentLanguage() !== 'english'"
+              >
+                English
+              </button>
+              <button
+                type="button"
+                (click)="setLanguage('tamil')"
+                class="relative z-10 flex-1 py-1 text-xs font-medium transition-colors duration-300 rounded-full"
+                [class.text-primary-blue]="currentLanguage() === 'tamil'"
+                [class.text-gray-500]="currentLanguage() !== 'tamil'"
+              >
+                தமிழ்
+              </button>
+            </div>
+        </div>
+        
+        @if(currentLanguage() === 'english') {
+          <p class="text-black leading-relaxed">
+          {{ story.shortStory }}
+          </p>
+        } @else {
+          <p class="text-black leading-relaxed">
+          {{ story.shortStoryTamil || story.shortStory }}
+          </p>
+        }
+
+        @if(story.detailedStory || story.detailedStoryTamil) {
         <button
           (click)="openPopup()"
           class="mt-6 bg-primary-blue text-white font-bold py-3 px-8 rounded-full hover:bg-accent-blue transition-colors duration-300 shadow-lg"
@@ -73,18 +109,33 @@
         />
       </svg>
     </button>
-    <h3 class="text-2xl font-bold font-serif text-black mb-4">
-      The Legacy of {{ story.title }}
-    </h3>
-    <div
-      class="text-left text-black space-y-4 max-h-[60vh] overflow-y-auto pr-4"
-    >
-      @for(paragraph of story.detailedStory?.split('\n'); track paragraph) {
-        @if(paragraph.trim()) {
-         <p>{{ paragraph }}</p>
+    @if (currentLanguage() === 'english') {
+      <h3 class="text-2xl font-bold font-serif text-black mb-4">
+        The Legacy of {{ story.title }}
+      </h3>
+      <div
+        class="text-left text-black space-y-4 max-h-[60vh] overflow-y-auto pr-4"
+      >
+        @for(paragraph of story.detailedStory?.split('\n'); track paragraph) {
+          @if(paragraph.trim()) {
+          <p>{{ paragraph }}</p>
+          }
         }
-      }
-    </div>
+      </div>
+    } @else {
+      <h3 class="text-2xl font-bold font-serif text-black mb-4">
+        {{ story.titleTamil || story.title }} - மரபு
+      </h3>
+      <div
+        class="text-left text-black space-y-4 max-h-[60vh] overflow-y-auto pr-4"
+      >
+        @for(paragraph of (story.detailedStoryTamil || story.detailedStory)?.split('\n'); track paragraph) {
+          @if(paragraph.trim()) {
+          <p>{{ paragraph }}</p>
+          }
+        }
+      </div>
+    }
   </div>
 </div>
 }

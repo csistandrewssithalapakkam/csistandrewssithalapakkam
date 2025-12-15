@@ -5,10 +5,9 @@ import { Injectable, signal } from '@angular/core';
 })
 export class HeroImagesService {
   heroImages = signal<string[]>([
-    'https://picsum.photos/1920/1080?random=church',
-    'https://picsum.photos/1920/1080?random=community',
-    'https://picsum.photos/1920/1080?random=sunrise',
-    'https://picsum.photos/1920/1080?random=nature',
+    'https://drive.google.com/thumbnail?id=1yQ84TfWeYITFjx-SJybr5MzeD5UZtJZM&sz=w2000',
+    'https://drive.google.com/thumbnail?id=101BnKL2SDR22HLnPYzE2621L_C2BCnsR&sz=w2000',
+    'https://drive.google.com/thumbnail?id=1p2WQ4pNXWtkwq4IAdbA80_m0h-eKRil0&sz=w2000'
   ]);
 
   addImage(url: string) {

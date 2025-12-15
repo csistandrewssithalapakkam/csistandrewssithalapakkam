@@ -1,51 +1,108 @@
-<div class="relative h-screen w-full flex items-center justify-center text-center text-white bg-black overflow-hidden">
-  <!-- Background Image -->
-  <div
-    class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out opacity-100 animate-zoom-out"
-    style="background-image: url('https://picsum.photos/1920/1080?random=church')"
-  ></div>
-  <div class="absolute inset-0 bg-black/60"></div>
-
-  <!-- Content -->
-  <div class="relative z-10 p-8">
-    <h1 (click)="onTextClick()" class="text-6xl md:text-8xl font-bold font-serif drop-shadow-lg cursor-pointer">Coming Soon</h1>
-    <p class="mt-4 text-2xl md:text-3xl font-serif text-gray-200 drop-shadow-md">St. Andrew's Church</p>
-    <p class="mt-8 max-w-2xl mx-auto text-lg md:text-xl text-gray-300">
-      Our new website is currently under construction. We are working hard to bring you an amazing online experience.
-      Please check back soon!
-    </p>
-  </div>
-</div>
-
-<!-- Password Prompt Modal -->
-@if (isPasswordPromptVisible()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" (click)="closePrompt()">
-    <div class="bg-white rounded-lg shadow-2xl w-full max-w-sm m-4 p-6 text-black text-left" (click)="$event.stopPropagation()">
-      <h3 class="text-xl font-bold font-serif mb-4">Enter Password</h3>
-      <p class="text-sm text-gray-600 mb-4">Please enter the password to view the site.</p>
-      
-      <input
-        type="password"
-        [value]="passwordAttempt()"
-        (input)="passwordAttempt.set($any($event.target).value); hasError.set(false)"
-        (keydown.enter)="submitPassword()"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-black placeholder-gray-500"
-        placeholder="Password"
-        autofocus
-      />
-
-      @if(hasError()) {
-        <p class="text-sm text-red-600 mt-2">Invalid password. Please try again.</p>
-      }
-
-      <div class="mt-6 flex justify-end gap-3">
-        <button (click)="closePrompt()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
-          Cancel
-        </button>
-        <button (click)="submitPassword()" class="px-4 py-2 bg-primary-blue text-white rounded-md hover:bg-accent-blue transition-colors">
-          Submit
-        </button>
-      </div>
+@if(!isFinished()) {
+  <div class="fixed inset-0 z-[200] overflow-hidden">
+    <!-- Left Gate -->
+    <div 
+      class="fixed top-0 left-0 h-full w-1/2 bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out delay-[1500ms]"
+      [style.background-image]="'url(https://drive.google.com/thumbnail?id=1yQ84TfWeYITFjx-SJybr5MzeD5UZtJZM&sz=w2000)'"
+      style="background-position: left center;"
+      [class.-translate-x-full]="isLaunching()">
+      <div class="absolute inset-0 bg-black/60"></div>
     </div>
+
+    <!-- Right Gate -->
+    <div
+      class="fixed top-0 right-0 h-full w-1/2 bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out delay-[1500ms]"
+      [style.background-image]="'url(https://drive.google.com/thumbnail?id=1yQ84TfWeYITFjx-SJybr5MzeD5UZtJZM&sz=w2000)'"
+      style="background-position: right center;"
+      [class.translate-x-full]="isLaunching()">
+      <div class="absolute inset-0 bg-black/60"></div>
+    </div>
+
+    <!-- Ribbon Cutting Ceremony (Animation after click) -->
+    @if(isLaunching()) {
+      <div class="fixed inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-300 delay-500" [class.opacity-100]="isLaunching()">
+        <!-- Ribbon Halves that Fall -->
+        <div class="absolute w-1/2 h-12 bg-red-600 left-0 origin-right animate-ribbon-fall"></div>
+        <div class="absolute w-1/2 h-12 bg-red-600 right-0 origin-left animate-ribbon-fall"></div>
+
+        <!-- Static Ribbon Behind Scissors -->
+        <div class="absolute w-full h-12 bg-red-600 shadow-lg"></div>
+        <div class="absolute w-16 h-16 bg-red-700 transform rotate-45 shadow-xl"></div>
+        
+        <!-- Scissors -->
+        <div class="relative w-48 h-48 text-gray-200 drop-shadow-xl -mt-24">
+          <!-- Left Blade -->
+          <svg class="absolute w-full h-full origin-bottom-right animate-scissor-cut-left" viewBox="0 0 100 100" fill="currentColor">
+            <path d="M70 75 a12,12 0 1,0 -24,0 a12,12 0 1,0 24,0 Z"></path>
+            <path d="M54 65 L30 50 L5 53 L54 65 Z"></path>
+          </svg>
+          <!-- Right Blade -->
+          <svg class="absolute w-full h-full origin-bottom-left animate-scissor-cut-right" viewBox="0 0 100 100" fill="currentColor">
+             <path d="M30 75 a12,12 0 1,1 24,0 a12,12 0 1,1 -24,0 Z"></path>
+             <path d="M46 65 L70 50 L95 53 L46 65 Z"></path>
+          </svg>
+        </div>
+      </div>
+    }
+
+    <!-- Content Overlay (fades out first) -->
+    <div 
+      class="fixed inset-0 z-10 flex items-center justify-center text-center text-white transition-opacity duration-500"
+      [class.opacity-0]="isLaunching()">
+      
+      @if (!passwordCorrect()) {
+        <div class="relative z-10 p-8">
+          <h1 (click)="onTextClick()" class="text-6xl md:text-8xl font-bold font-serif drop-shadow-lg cursor-pointer">Coming Soon</h1>
+          <p class="mt-4 text-2xl md:text-3xl font-serif text-gray-200 drop-shadow-md">St. Andrew's Church</p>
+          <p class="mt-8 max-w-2xl mx-auto text-lg md:text-xl text-gray-300">
+            Our new website is currently under construction. We are working hard to bring you an amazing online experience.
+            Please check back soon!
+          </p>
+        </div>
+      } @else {
+        <!-- Clickable Ribbon View -->
+        <div (click)="launchSite()" class="relative z-20 flex items-center justify-center w-full h-full cursor-pointer group animate-fade-in">
+            <div class="absolute w-full h-12 bg-red-600 shadow-lg"></div>
+            <div class="absolute w-16 h-16 bg-red-700 transform rotate-45 shadow-xl"></div>
+            <div class="relative text-center text-white drop-shadow-lg">
+                <h2 class="text-3xl font-bold font-serif transition-transform duration-300 group-hover:scale-110">Click Ribbon to Open</h2>
+                <p class="text-lg mt-1">Welcome to St. Andrew's Church</p>
+            </div>
+        </div>
+      }
+    </div>
+
+    <!-- Password Prompt Modal -->
+    @if (isPasswordPromptVisible()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" (click)="closePrompt()">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-sm m-4 p-6 text-black text-left" (click)="$event.stopPropagation()">
+          <h3 class="text-xl font-bold font-serif mb-4">Enter Password</h3>
+          <p class="text-sm text-gray-600 mb-4">Please enter the password to view the site.</p>
+          
+          <input
+            type="password"
+            [value]="passwordAttempt()"
+            (input)="passwordAttempt.set($any($event.target).value); hasError.set(false)"
+            (keydown.enter)="submitPassword()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-black placeholder-gray-500"
+            placeholder="Password"
+            autofocus
+          />
+
+          @if(hasError()) {
+            <p class="text-sm text-red-600 mt-2">Invalid password. Please try again.</p>
+          }
+
+          <div class="mt-6 flex justify-end gap-3">
+            <button (click)="closePrompt()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
+              Cancel
+            </button>
+            <button (click)="submitPassword()" class="px-4 py-2 bg-primary-blue text-white rounded-md hover:bg-accent-blue transition-colors">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 }

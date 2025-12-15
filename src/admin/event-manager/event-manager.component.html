@@ -16,7 +16,9 @@
       @for(event of upcomingEvents(); track event.id) {
         <div class="bg-gray-50 border rounded-lg p-4 flex flex-col md:flex-row gap-4">
           @if(event.image) {
-            <img [ngSrc]="event.image" [alt]="event.title" width="200" height="120" class="w-full md:w-48 h-32 object-cover rounded-md flex-shrink-0">
+            <div class="w-full md:w-48 h-32 flex-shrink-0 cursor-pointer" (click)="openImagePreview(event, upcomingEvents())">
+              <img [src]="event.image" [alt]="event.title" class="w-full h-full object-cover rounded-md">
+            </div>
           } @else {
             <div class="w-full md:w-48 h-32 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -49,7 +51,9 @@
       @for(event of pastEvents(); track event.id) {
         <div class="bg-gray-50 border rounded-lg p-4 flex flex-col md:flex-row gap-4 opacity-70">
           @if(event.image) {
-            <img [ngSrc]="event.image" [alt]="event.title" width="200" height="120" class="w-full md:w-48 h-32 object-cover rounded-md flex-shrink-0">
+            <div class="w-full md:w-48 h-32 flex-shrink-0 cursor-pointer" (click)="openImagePreview(event, pastEvents())">
+             <img [src]="event.image" [alt]="event.title" class="w-full h-full object-cover rounded-md">
+            </div>
           } @else {
             <div class="w-full md:w-48 h-32 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center">
                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -113,4 +117,9 @@
     </form>
   </div>
 </div>
+}
+
+<!-- Full Screen Image Preview -->
+@if (selectedImageForPreview(); as preview) {
+  <app-image-preview [images]="preview.images" [startIndex]="preview.index" (close)="closeImagePreview()" />
 }

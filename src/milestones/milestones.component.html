@@ -8,111 +8,44 @@
       Join us in celebrating the special moments within our church family.
     </p>
 
-    <div class="mt-12 grid md:grid-cols-2 gap-12">
-      <!-- Birthdays Card -->
+    <div class="mt-12">
+      <!-- Combined Birthdays & Anniversaries Card -->
       <div
-        class="bg-white rounded-xl shadow-lg p-10 flex flex-col items-center justify-center text-center relative overflow-hidden border-t-4 border-warm-gold"
+        class="bg-white rounded-xl shadow-lg p-8 text-center relative overflow-hidden border-t-8 border-warm-gold max-w-4xl mx-auto"
       >
-        <h3 class="text-2xl font-bold text-black">
-          This Week's Birthdays
+        <h3 class="text-3xl font-bold text-black font-serif">
+          Birthday & Wedding Anniversary
         </h3>
-        <div class="mt-6 w-full min-h-[380px] flex items-center justify-center">
-          @if (birthdays().length > 0) { 
-            @for (bday of birthdays(); track bday.name; let i = $index) {
-              <div
-                class="absolute transition-opacity duration-500 w-full px-8"
-                [class.opacity-100]="currentBirthdayIndex() === i"
-                [class.opacity-0]="currentBirthdayIndex() !== i"
-              >
-                <p class="text-xl font-semibold text-black">{{ bday.name }}</p>
-                <p class="text-black">{{ bday.date }}</p>
-                <hr class="my-4 border-gray-200" />
-
-                @if(displayLanguage() === 'english' || displayLanguage() === 'both') {
-                  <blockquote class="text-black italic font-serif">
-                    {{ bday.quote }}
-                  </blockquote>
-                  <p class="mt-2 text-warm-gold font-semibold">{{ bday.reference }}</p>
-                }
-                @if(displayLanguage() === 'tamil' || displayLanguage() === 'both') {
-                  <div [class.mt-4]="displayLanguage() === 'both'">
-                    <blockquote class="text-black italic font-serif">
-                      {{ bday.quoteTamil }}
-                    </blockquote>
-                    <p class="mt-2 text-warm-gold font-semibold">{{ bday.referenceTamil }}</p>
-                  </div>
-                }
-              </div>
-            }
-          } @else {
-            <p>No birthdays this week.</p>
-          }
-        </div>
-        <button
-          (click)="prevMilestone('birthday')"
-          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        <button
-          (click)="nextMilestone('birthday')"
-          class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-        </button>
-      </div>
-      <!-- Anniversaries Card -->
-      <div
-        class="bg-white rounded-xl shadow-lg p-10 flex flex-col items-center justify-center text-center relative overflow-hidden border-t-4 border-warm-gold"
-      >
-        <h3 class="text-2xl font-bold text-black">
-          This Week's Anniversaries
-        </h3>
-        <div class="mt-6 w-full min-h-[380px] flex items-center justify-center">
-          @if (anniversaries().length > 0) { 
-            @for (ann of anniversaries(); track ann.name; let i = $index) {
-              <div
-                class="absolute transition-opacity duration-500 w-full px-8"
-                [class.opacity-100]="currentAnniversaryIndex() === i"
-                [class.opacity-0]="currentAnniversaryIndex() !== i"
-              >
-                <p class="text-xl font-semibold text-black">{{ ann.name }}</p>
-                <p class="text-black">{{ ann.date }}</p>
-                <hr class="my-4 border-gray-200" />
-
-                @if(displayLanguage() === 'english' || displayLanguage() === 'both') {
-                  <blockquote class="text-black italic font-serif">
-                    {{ ann.quote }}
-                  </blockquote>
-                  <p class="mt-2 text-warm-gold font-semibold">{{ ann.reference }}</p>
-                }
-                @if(displayLanguage() === 'tamil' || displayLanguage() === 'both') {
-                  <div [class.mt-4]="displayLanguage() === 'both'">
-                    <blockquote class="text-black italic font-serif">
-                      {{ ann.quoteTamil }}
-                    </blockquote>
-                    <p class="mt-2 text-warm-gold font-semibold">{{ ann.referenceTamil }}</p>
-                  </div>
-                }
-              </div>
-            }
-          } @else {
-            <p>No anniversaries this week.</p>
-          }
-        </div>
-        <button
-          (click)="prevMilestone('anniversary')"
-          class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        <button
-          (click)="nextMilestone('anniversary')"
-          class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-        </button>
+        
+        @if (birthdays().length > 0 || anniversaries().length > 0) {
+          <div class="mt-8 text-center px-4 py-6">
+            <p class="text-xl text-gray-800 leading-relaxed font-serif">
+              CSI St. Andrew's Church joyfully extends its warmest wishes to all members celebrating their Birthdays and Wedding Anniversaries this week.
+            </p>
+            <p class="mt-4 text-lg text-gray-700 leading-relaxed italic">
+              "May the Lord bless you and keep you; may His face shine upon you and be gracious to you. We pray for a year ahead filled with abundant joy, profound peace, and countless blessings."
+            </p>
+          </div>
+        } @else {
+          <p class="mt-6 text-lg text-gray-600 py-8">
+            No birthdays or anniversaries to celebrate this week. We pray for God's blessings on our entire church family.
+          </p>
+        }
       </div>
     </div>
+
+    <div class="mt-16 max-w-3xl mx-auto bg-white/50 p-6 rounded-lg shadow-inner border-t-2 border-warm-gold">
+        <h3 class="text-xl font-bold text-black mb-4 font-serif">A Blessing For You</h3>
+        <blockquote class="text-black italic font-serif text-lg">
+          {{ commonVerse.quote }}
+        </blockquote>
+        <p class="mt-2 text-warm-gold font-semibold">{{ commonVerse.reference }}</p>
+        <hr class="my-4 border-gray-300" />
+        <blockquote class="text-black italic font-serif text-lg">
+          {{ commonVerse.quoteTamil }}
+        </blockquote>
+        <p class="mt-2 text-warm-gold font-semibold">{{ commonVerse.referenceTamil }}</p>
+    </div>
+
   </div>
 </section>

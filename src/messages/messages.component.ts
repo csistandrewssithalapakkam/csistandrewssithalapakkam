@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-messages',
-  imports: [NgOptimizedImage],
+  imports: [],
   templateUrl: './messages.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,5 +1,7 @@
-@if (bypassService.isUnlocked()) {
+<!-- The main application content, hidden until unlocked -->
+<div [hidden]="!isUnlocked()">
   <router-outlet></router-outlet>
-} @else {
-  <app-coming-soon></app-coming-soon>
-}
+</div>
+
+<!-- The "Coming Soon" overlay, visible until unlocked -->
+<app-coming-soon></app-coming-soon>

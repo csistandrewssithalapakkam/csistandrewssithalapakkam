@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BypassService } from './bypass.service';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
+import { BypassService } from './bypass.service';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +10,6 @@ import { ComingSoonComponent } from './coming-soon/coming-soon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  bypassService = inject(BypassService);
+  private bypassService = inject(BypassService);
+  isUnlocked = this.bypassService.isUnlocked;
 }

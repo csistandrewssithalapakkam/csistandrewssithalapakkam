@@ -1,0 +1,102 @@
+<app-header></app-header>
+<main>
+  <section id="church-history" class="py-20 bg-light-blue-bg pt-32">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between md:items-center mb-12 gap-4">
+        <div class="text-left">
+          <h2 class="text-4xl font-bold font-serif text-black">Our Journey of Faith</h2>
+          <p class="mt-2 text-black">The story of how God built St. Andrew's Church.</p>
+        </div>
+        <a routerLink="/" class="bg-gray-200 text-black font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition-colors duration-300 flex items-center gap-2 self-start md:self-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Home
+        </a>
+      </div>
+
+      <!-- Language Toggle -->
+      <div class="flex justify-center mb-12">
+        <div class="relative flex w-48 p-1 bg-gray-200 rounded-full">
+          <div
+            class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"
+            [class.translate-x-full]="currentLanguage() === 'tamil'"
+          ></div>
+          <button
+            type="button"
+            (click)="setLanguage('english')"
+            class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+            [class.text-primary-blue]="currentLanguage() === 'english'"
+            [class.text-gray-500]="currentLanguage() !== 'english'"
+          >
+            English
+          </button>
+          <button
+            type="button"
+            (click)="setLanguage('tamil')"
+            class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+            [class.text-primary-blue]="currentLanguage() === 'tamil'"
+            [class.text-gray-500]="currentLanguage() !== 'tamil'"
+          >
+            தமிழ்
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-16">
+        @for(stage of historyStages; track stage.stageTitle) {
+          <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg border-l-8 border-warm-gold">
+            <!-- Stage Title -->
+            <h3 class="text-3xl font-bold font-serif text-black mb-6">
+              @if(currentLanguage() === 'english') {
+                {{ stage.stageTitle }}
+              } @else {
+                {{ stage.stageTitleTamil }}
+              }
+            </h3>
+
+            <!-- Images -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6" [class.md:grid-cols-4]="stage.images.length === 4">
+              @for(image of stage.images; track image) {
+                <div class="overflow-hidden rounded-lg shadow-md">
+                   <img [src]="image" alt="Church history stage image" class="w-full h-64 object-cover">
+                </div>
+              }
+            </div>
+
+            <!-- Verse and Description -->
+            <div class="mt-6 text-lg">
+               @if(currentLanguage() === 'english') {
+                <div class="animate-fade-in">
+                  <blockquote class="italic text-gray-800 font-serif border-l-4 border-gray-300 pl-4">
+                    "{{ stage.verse }}"
+                  </blockquote>
+                  <p class="text-right font-semibold text-warm-gold mt-2">{{ stage.verseReference }}</p>
+                  <div class="mt-6 text-black space-y-4">
+                    @for(p of stage.description; track p) {
+                      <p>{{ p }}</p>
+                    }
+                  </div>
+                </div>
+              } @else {
+                <div class="animate-fade-in">
+                   <blockquote class="italic text-gray-800 font-serif border-l-4 border-gray-300 pl-4">
+                    "{{ stage.verseTamil }}"
+                  </blockquote>
+                  <p class="text-right font-semibold text-warm-gold mt-2">{{ stage.verseReferenceTamil }}</p>
+                  <div class="mt-6 text-black space-y-4">
+                    @for(p of stage.descriptionTamil; track p) {
+                      <p>{{ p }}</p>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  </section>
+</main>
+<app-footer></app-footer>

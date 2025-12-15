@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, input, output, signal, effect } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-image-preview',
-  imports: [NgOptimizedImage],
+  imports: [],
   templateUrl: './image-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

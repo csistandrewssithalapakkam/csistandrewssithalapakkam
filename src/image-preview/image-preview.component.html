@@ -11,7 +11,7 @@
     <!-- Main Image -->
     <div class="relative max-w-full max-h-full flex items-center justify-center">
        @if(images().length > 0) {
-        <img [ngSrc]="images()[currentIndex()]" alt="Full screen gallery image" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl" width="1600" height="900" priority />
+        <img [src]="images()[currentIndex()]" alt="Full screen gallery image" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl" />
        }
     </div>
 

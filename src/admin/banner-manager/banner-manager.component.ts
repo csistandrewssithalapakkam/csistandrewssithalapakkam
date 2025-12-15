@@ -10,7 +10,7 @@ import { HeroImagesService } from '../../hero/hero-images.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BannerManagerComponent {
-  private fb = inject(FormBuilder);
+  private fb: FormBuilder = inject(FormBuilder);
   heroImagesService = inject(HeroImagesService);
 
   addImageForm = this.fb.group({

@@ -1,12 +1,11 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgOptimizedImage } from '@angular/common';
 import { GalleryService, GalleryCategory } from '../../gallery/gallery.service';
 import { ImagePreviewComponent } from '../../image-preview/image-preview.component';
 
 @Component({
   selector: 'app-gallery-manager',
-  imports: [ReactiveFormsModule, NgOptimizedImage, ImagePreviewComponent],
+  imports: [ReactiveFormsModule, ImagePreviewComponent],
   templateUrl: './gallery-manager.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

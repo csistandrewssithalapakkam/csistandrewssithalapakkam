@@ -1,0 +1,43 @@
+<section id="fellowship" class="py-20 bg-white">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold font-serif text-black">Our Fellowship Groups</h2>
+      <p class="mt-2 text-black max-w-2xl mx-auto">
+        Find your place and grow in faith with one of our vibrant community groups.
+      </p>
+    </div>
+    <div class="space-y-12">
+      @for(group of fellowshipGroups; track group.name; let isEven = $even) {
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row md:items-center group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      >
+        <div 
+          class="md:w-1/3 flex-shrink-0"
+          [class.md:order-last]="isEven"
+        >
+          <img
+            [src]="group.imageUrl"
+            [alt]="group.name"
+            class="w-full h-48 object-cover rounded-lg"
+          />
+        </div>
+        <div class="p-6 md:p-8 flex-grow">
+          <h4 class="text-2xl font-bold text-black font-serif">
+            {{ group.name }}
+          </h4>
+          <div class="mt-4 space-y-4 text-black leading-relaxed">
+            @for(paragraph of group.description; track $index) {
+            <p>{{ paragraph }}</p>
+            }
+          </div>
+          @if (group.inCharge) {
+          <p class="mt-6 font-semibold text-warm-gold">
+            {{ group.inCharge }}
+          </p>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>

@@ -11,41 +11,17 @@ export interface GalleryCategory {
 export class GalleryService {
   galleryCategories = signal<GalleryCategory[]>([
     {
-      name: 'Sunday School',
+      name: 'Church Dedication - 20 Dec, 2023',
       images: [
-        'https://picsum.photos/800/600?random=20',
-        'https://picsum.photos/600/800?random=21',
-        'https://picsum.photos/800/600?random=22',
-        'https://picsum.photos/800/600?random=23',
-      ],
-    },
-    {
-      name: "Men's Fellowship",
-      images: [
-        'https://picsum.photos/800/600?random=10',
-        'https://picsum.photos/600/800?random=11',
-        'https://picsum.photos/800/600?random=12',
-        'https://picsum.photos/800/600?random=13',
-        'https://picsum.photos/600/800?random=14',
-        'https://picsum.photos/800/600?random=15',
-      ],
-    },
-    {
-      name: 'Community Outreach',
-      images: [
-        'https://picsum.photos/800/600?random=30',
-        'https://picsum.photos/600/800?random=31',
-        'https://picsum.photos/800/600?random=32',
-      ],
-    },
-    {
-      name: 'Church Anniversary',
-      images: [
-        'https://picsum.photos/800/600?random=40',
-        'https://picsum.photos/600/800?random=41',
-        'https://picsum.photos/800/600?random=42',
-        'https://picsum.photos/800/600?random=43',
-        'https://picsum.photos/600/800?random=44',
+        'https://i.ytimg.com/vi/LV6iBuavBLM/maxresdefault.jpg',
+        'https://drive.google.com/thumbnail?id=1VjVeHHu5n5G-K2CAnhm9Xzo3q9K1-Laa&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1BWqpXSx-6ODcm_GYI8liptsb_CNI0Dy0&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1aoAwrTd1NVPejsJcFRWpI9RXb9BhbVPU&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1Vb6fCl16Hbu7YcWJLnQlV0an_244wggm&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1oamw8LM7qU0JFsw13wfoQvI4QFiPRBTl&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1oamw8LM7qU0JFsw13wfoQvI4QFiPRBTl&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1hXO0UIyqVToz8tfERrLVPDAo3uB5OwU1&sz=w2000',
+        'https://drive.google.com/thumbnail?id=1FXXD-4VJ-69E9n9INh-erELvL2catIyf&sz=w2000'
       ],
     },
   ]);

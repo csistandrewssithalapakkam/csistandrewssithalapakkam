@@ -44,9 +44,4 @@ export class HeroComponent implements OnInit, OnDestroy {
   selectImage(index: number) {
     this.currentHeroImageIndex.set(index);
   }
-
-  scrollTo(sectionId: string, event: Event) {
-    event.preventDefault();
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-  }
 }

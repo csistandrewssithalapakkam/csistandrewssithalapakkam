@@ -14,6 +14,14 @@ export const routes: Routes = [
     loadComponent: () => import('./gallery-page/gallery-page.component').then(m => m.GalleryPageComponent),
   },
   {
+    path: 'forms',
+    loadComponent: () => import('./forms-page/forms-page.component').then(m => m.FormsPageComponent),
+  },
+  {
+    path: 'history',
+    loadComponent: () => import('./church-history/church-history.component').then(m => m.ChurchHistoryComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   }

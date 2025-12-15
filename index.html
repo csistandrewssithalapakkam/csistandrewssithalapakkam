@@ -38,6 +38,39 @@
     .animate-zoom-out {
       animation: zoom-out 8s linear forwards;
     }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+
+    /* Ribbon Cutting Animations */
+    @keyframes scissor-cut-left {
+      0% { transform: rotate(15deg); }
+      50% { transform: rotate(-25deg); }
+      100% { transform: rotate(-25deg); }
+    }
+    @keyframes scissor-cut-right {
+      0% { transform: rotate(-15deg); }
+      50% { transform: rotate(25deg); }
+      100% { transform: rotate(25deg); }
+    }
+    @keyframes ribbon-fall {
+      0% { transform: translateY(0) scaleY(1); opacity: 1; }
+      100% { transform: translateY(100vh) scaleY(0); opacity: 0; }
+    }
+    .animate-scissor-cut-left {
+      animation: scissor-cut-left 1s ease-in-out forwards;
+    }
+    .animate-scissor-cut-right {
+      animation: scissor-cut-right 1s ease-in-out forwards;
+    }
+    .animate-ribbon-fall {
+      animation: ribbon-fall 1s ease-in forwards;
+      animation-delay: 500ms; /* Start falling halfway through the cut */
+    }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,8 +89,7 @@
     "@angular/core": "https://next.esm.sh/@angular/core@^20.3.10?external=rxjs",
     "@angular/common": "https://next.esm.sh/@angular/common@^20.3.10?external=rxjs",
     "@angular/router": "https://next.esm.sh/@angular/router@^20.3.10?external=rxjs",
-    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.10?external=rxjs",
-    "@angular/common/http": "https://next.esm.sh/@angular/common@^21.0.0/http?external=rxjs"
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.10?external=rxjs"
   }
 }
 </script>

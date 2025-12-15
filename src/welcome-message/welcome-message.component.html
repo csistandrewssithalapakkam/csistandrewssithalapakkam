@@ -1,0 +1,132 @@
+<!-- Welcome Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 md:items-center">
+      <!-- Left Column: Text -->
+      <div class="text-left">
+        <!-- Language Toggle -->
+        <div class="flex justify-start mb-6">
+          <div class="relative flex w-48 p-1 bg-gray-200 rounded-full">
+            <div
+              class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"
+              [class.translate-x-full]="currentLanguage() === 'tamil'"
+            ></div>
+            <button
+              type="button"
+              (click)="setLanguage('english')"
+              class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+              [class.text-primary-blue]="currentLanguage() === 'english'"
+              [class.text-gray-500]="currentLanguage() !== 'english'"
+            >
+              English
+            </button>
+            <button
+              type="button"
+              (click)="setLanguage('tamil')"
+              class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+              [class.text-primary-blue]="currentLanguage() === 'tamil'"
+              [class.text-gray-500]="currentLanguage() !== 'tamil'"
+            >
+              தமிழ்
+            </button>
+          </div>
+        </div>
+
+        <!-- Text Content -->
+        <div>
+          @if (currentLanguage() === 'english') {
+          <div>
+            <h2 class="text-4xl font-bold font-serif text-black">
+              Welcome to St. Andrew’s Church
+            </h2>
+            <div class="mt-6 text-black leading-relaxed space-y-4 text-lg">
+              <p>
+                We are delighted to welcome you and extend our heartfelt
+                greetings to you in the name of the Lord and saviour Jesus
+                Christ.
+              </p>
+              <p>
+                St. Andrew’s Church under Medavakkam Pastorate C.S.I Chennai
+                diocese holds a significant place in Chennai. If you are nearby
+                Sithalapakkam please visit our church.
+              </p>
+              <p>
+                Our doors are open to everyone, and we invite you to join us
+                in our weekdays and Sunday worship services.
+              </p>
+              <p>
+                Feel free to explore our website to know more about our
+                services, events, and ministries. If you have any questions or
+                need assistance, don’t hesitate to contact us.
+              </p>
+              <p class="font-semibold">
+                May God’s grace and peace be with you always!
+              </p>
+            </div>
+          </div>
+          } @else {
+          <div>
+            <h2 class="text-4xl font-bold font-serif text-black">
+              புனித அந்திரேயா ஆலயத்திற்கு வரவேற்கிறோம்
+            </h2>
+            <div class="mt-6 text-black leading-relaxed space-y-4 text-lg">
+              <p>
+                தென்னிந்திய திருச்சபை சென்னை பேராயம் ,மேடவாக்கம் குருசேகரம்,
+                புனித அந்திரேயா தேவாலயம் உங்களை வரவேற்பதில் நாங்கள்
+                மகிழ்ச்சியடைகிறோம். கர்த்தரும் இரட்சகருமான இயேசு கிறிஸ்துவின்
+                நாமத்தில் எங்கள் மனமார்ந்த வாழ்த்துக்களைத் தெரிவித்துக்
+                கொள்கிறோம்.
+              </p>
+              <p>
+                புனித அந்திரேயா தேவாலயம் சென்னை மேடவாக்கம் அருகில்
+                சித்தலப்பாக்த்தில் அமைந்துள்ளது. நீங்கள் சித்தலப்பாக்கத்தில்
+                அல்லது சித்தலப்பாக்கத்திற்கு அருகில் வசிக்கின்றவராய்
+                இருந்தால் அந்திரேயா ஆலய ஆராதனையில் பங்கேற்க உங்களை அன்புடன்
+                அழைக்கிறோம்.
+              </p>
+              <p>
+                ஆலய கதவுகள் அனைவருக்கும் திறந்திருக்கும், மேலும் எங்கள் வார
+                நாட்களிலும் ஞாயிற்றுக்கிழமை வழிபாட்டு சேவைகளிலும் எங்களுடன்
+                இணைதந்து பங்கேற்க உங்களை அன்புடன் அழைக்கிறோம்.
+              </p>
+              <p>
+                எங்கள் சேவைகள், நிகழ்வுகள் மற்றும் ஊழியங்களைப் பற்றி மேலும்
+                அறிய எங்கள் வலைத்தளத்தை பயன்படுத்ததுங்கள்.உங்களுக்கு ஏதேனும்
+                கேள்விகள் இருந்தால் அல்லது உதவி தேவைப்பட்டால், எங்களைத்
+                தொடர்பு கொள்ள தயங்க வேண்டாம்.
+              </p>
+              <p class="font-semibold">
+                தேவ கிருபையும் தேவ சமதானம் எப்போதும் உங்களுடன் இருக்கட்டும்!
+              </p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Column: Image and Name -->
+      <div class="text-center">
+        <div class="w-full max-w-sm mx-auto">
+          <img
+            src="https://drive.google.com/thumbnail?id=1cLaBr-dG83D5ggj8C5pI5hEmqnXiwA0A&sz=w2000"
+            alt="Presbyter Incharge"
+            class="rounded-lg shadow-xl w-full h-auto object-cover object-top aspect-[4/5]"
+          />
+        </div>
+        <div class="mt-4">
+          @if (currentLanguage() === 'english') {
+          <h3 class="text-2xl font-bold font-serif text-black">
+            {{ pastorName }}
+          </h3>
+          <p class="text-md text-gray-600 mt-1">{{ pastorTitle }}</p>
+          } @else {
+          <h3 class="text-2xl font-bold font-serif text-black">
+            {{ pastorNameTamil }}
+          </h3>
+          <p class="text-md text-gray-600 mt-1">{{ pastorTitleTamil }}</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

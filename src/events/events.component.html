@@ -5,7 +5,7 @@
       Events at St. Andrew's
     </h2>
     <p class="mt-2 text-black">
-      Get involved and connect with our community.
+      Stay connected with our church family through worship services, fellowship gatherings, and special events.
     </p>
 
     <!-- Upcoming Events -->
@@ -16,19 +16,17 @@
             @for (event of upcomingEvents(); track event.id) {
             <div class="bg-white rounded-lg shadow-lg overflow-hidden text-left group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col">
                 @if(event.image) {
-                <div class="overflow-hidden">
+                <div class="overflow-hidden cursor-pointer" (click)="openImagePreview(event, upcomingEvents())">
                 <img
-                    [ngSrc]="event.image"
+                    [src]="event.image"
                     alt="{{ event.title }}"
                     class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    width="600"
-                    height="400"
                 />
                 </div>
                 }
                 <div class="p-6 flex-grow flex flex-col">
                     <h3 class="text-xl font-bold text-black">{{ event.title }}</h3>
-                    <p class="mt-1 font-semibold text-warm-gold">{{ event.date | date:'fullDate' }} at {{ event.date | date:'shortTime' }}</p>
+                    <p class="mt-1 font-semibold text-warm-gold">{{ event.date | date:'fullDate' }}</p>
                     <p class="mt-3 text-black flex-grow">{{ event.description }}</p>
                 </div>
             </div>
@@ -47,13 +45,11 @@
             @for (event of recentEvents(); track event.id) {
             <div class="bg-white rounded-lg shadow-lg overflow-hidden text-left group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col">
                  @if(event.image) {
-                    <div class="overflow-hidden">
+                    <div class="overflow-hidden cursor-pointer" (click)="openImagePreview(event, recentEvents())">
                     <img
-                        [ngSrc]="event.image"
+                        [src]="event.image"
                         alt="{{ event.title }}"
                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                        width="600"
-                        height="400"
                     />
                     </div>
                 }
@@ -72,3 +68,8 @@
 
   </div>
 </section>
+
+<!-- Full Screen Image Preview -->
+@if (selectedImageForPreview(); as preview) {
+  <app-image-preview [images]="preview.images" [startIndex]="preview.index" (close)="closeImagePreview()" />
+}

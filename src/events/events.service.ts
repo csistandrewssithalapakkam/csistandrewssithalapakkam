@@ -12,30 +12,58 @@ export interface ChurchEvent {
   providedIn: 'root',
 })
 export class EventsService {
-  private nextId = 4;
+  private nextId = 8;
   events = signal<ChurchEvent[]>([
+    // Upcoming Events
     {
       id: 1,
-      image: 'https://picsum.photos/600/400?random=4',
-      title: 'Community Picnic',
-      date: this.getDateInFuture(7), // 7 days from now
+      title: "Women's Fellowship Carol Service",
+      date: new Date('2025-12-14T18:00:00'),
       description:
-        'Join us for a day of fun, food, and fellowship at Central Park. All are welcome!',
+        "The Women's Fellowship leads us in a special carol service filled with grace and beautiful music.",
     },
     {
       id: 2,
-      image: 'https://picsum.photos/600/400?random=5',
-      title: 'Youth Group Retreat',
-      date: this.getDateInFuture(20), // 20 days from now
+      title: 'Christmas Carols',
+      date: new Date('2025-12-11T19:00:00'),
       description:
-        'An amazing weekend retreat for our youth to grow in faith and build friendships.',
+        "Our final community carol service for the season at TNHB. Don't miss this special night of worship.",
     },
     {
       id: 3,
-      title: 'Worship Night',
-      date: this.getDateInPast(10), // 10 days ago
+      title: 'Christmas Carols',
+      date: new Date('2025-12-07T19:00:00'),
       description:
-        'A special night dedicated to worship, prayer, and reflection. Come lift your voice with us.',
+        "A second evening to enjoy the wonderful sounds of Christmas and the story of our Savior's birth at Place 2.",
+    },
+    {
+      id: 4,
+      title: 'Christmas Carols',
+      date: new Date('2025-12-05T19:00:00'),
+      description:
+        'Join us for a beautiful evening of traditional Christmas carols at Place 3 as we celebrate the season.',
+    },
+    {
+      id: 5,
+      title: 'Sunday School Carol Service',
+      date: new Date('2025-12-07T17:00:00'),
+      description:
+        'Our talented Sunday School children present their annual Christmas Carol service. A heartwarming event for the whole family.',
+    },
+    {
+      id: 6,
+      title: 'Couple retreat 2025',
+      date: new Date('2025-11-29T10:00:00'),
+      description:
+        'Join the Couple retreat 2025 at CSI st paul church Medavakkam.',
+      image: 'https://drive.google.com/thumbnail?id=1FcPKS2srmGuA67gL7TvXPh98Ff85k4ct&sz=w2000'
+    },
+    {
+      id: 7,
+      title: "Men's Fellowship Annual retreat 2025",
+      date: new Date('2025-10-25T10:00:00'),
+      description: 'Join the MensFellowship Annual retreat 2025 at Padappai.',
+      image: 'https://drive.google.com/thumbnail?id=1uu1TpPno7-WP13r3Okjh22uptsees9Pc&sz=w2000'
     },
   ]);
 
@@ -53,16 +81,16 @@ export class EventsService {
 
   addEvent(eventData: Omit<ChurchEvent, 'id'>) {
     const newEvent: ChurchEvent = { ...eventData, id: this.nextId++ };
-    this.events.update(events => [...events, newEvent]);
+    this.events.update((events) => [...events, newEvent]);
   }
 
   updateEvent(updatedEvent: ChurchEvent) {
-    this.events.update(events =>
-      events.map(event => event.id === updatedEvent.id ? updatedEvent : event)
+    this.events.update((events) =>
+      events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event))
     );
   }
 
   deleteEvent(id: number) {
-    this.events.update(events => events.filter(event => event.id !== id));
+    this.events.update((events) => events.filter((event) => event.id !== id));
   }
 }

@@ -1,0 +1,31 @@
+<section id="services" class="py-20 bg-white">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold font-serif text-black">Our Services</h2>
+      <p class="mt-2 text-black max-w-2xl mx-auto">
+        Join us for worship, prayer, and fellowship throughout the week.
+      </p>
+    </div>
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-xl shadow-lg p-8 border-t-8 border-warm-gold">
+        <div class="space-y-8">
+          @for(service of serviceTimes; track service.category) {
+          <div>
+            <h4 class="text-2xl font-semibold text-black mb-4 font-serif">
+              {{ service.category }}
+            </h4>
+            <ul class="space-y-3 text-black text-lg">
+              @for(item of service.items; track item.name) {
+              <li class="flex justify-between items-baseline border-b border-gray-200 pb-3">
+                <span>{{ item.name }}</span>
+                <span class="font-semibold text-right">{{ item.time }}</span>
+              </li>
+              }
+            </ul>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

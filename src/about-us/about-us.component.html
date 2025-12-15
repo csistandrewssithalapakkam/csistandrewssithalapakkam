@@ -1,0 +1,132 @@
+<!-- About Us Section -->
+<section id="about" class="py-20 bg-light-blue-bg">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold font-serif text-black">About Us</h2>
+    </div>
+
+    <!-- Language Toggle -->
+    <div class="flex justify-center mb-8">
+      <div class="relative flex w-48 p-1 bg-gray-200 rounded-full">
+        <div
+          class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"
+          [class.translate-x-full]="currentLanguage() === 'tamil'"
+        ></div>
+        <button
+          type="button"
+          (click)="setLanguage('english')"
+          class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+          [class.text-primary-blue]="currentLanguage() === 'english'"
+          [class.text-gray-500]="currentLanguage() !== 'english'"
+        >
+          English
+        </button>
+        <button
+          type="button"
+          (click)="setLanguage('tamil')"
+          class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+          [class.text-primary-blue]="currentLanguage() === 'tamil'"
+          [class.text-gray-500]="currentLanguage() !== 'tamil'"
+        >
+          தமிழ்
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="max-w-4xl mx-auto text-left text-lg text-black leading-relaxed"
+    >
+      @if (currentLanguage() === 'english') {
+      <div class="space-y-6 animate-fade-in">
+        <div class="bg-white p-6 rounded-lg shadow-inner border-l-4 border-warm-gold">
+          <ul class="space-y-2">
+            <li>
+              <strong class="font-semibold text-gray-800"
+                >Established:</strong
+              >
+              <span class="ml-2">2021</span>
+            </li>
+            <li>
+              <strong class="font-semibold text-gray-800">Pastorate:</strong>
+              <span class="ml-2">Medavakkam Pastorate</span>
+            </li>
+            <li>
+              <strong class="font-semibold text-gray-800"
+                >Parent Church:</strong
+              >
+              <span class="ml-2">CSI St. John's Church</span>
+            </li>
+          </ul>
+        </div>
+        <p>
+          CSI St. Andrew's Church, Sithalapakkam TNHB, was established in the
+          year 2021.
+        </p>
+        <p>
+          It is a relatively new church and is part of the Medavakkam
+          Pastorate, which falls under the purview of CSI St. John's Church,
+          led by Rev. Abhinath Selvakumar.
+        </p>
+        <p>
+          The church's history is tied to the local development of the TNHB
+          (Tamil Nadu Housing Board) colony in Sithalapakkam.
+        </p>
+        <p>The congregation and community grew in recent years.</p>
+      </div>
+      } @else {
+      <div class="space-y-6 animate-fade-in">
+        <div class="bg-white p-6 rounded-lg shadow-inner border-l-4 border-warm-gold">
+          <ul class="space-y-2">
+            <li>
+              <strong class="font-semibold">நிறுவப்பட்ட ஆண்டு:</strong>
+              <span class="ml-2">2021</span>
+            </li>
+            <li>
+              <strong class="font-semibold">குருசேகரம்:</strong>
+              <span class="ml-2">மேடவாக்கம் குருசேகரம்</span>
+            </li>
+            <li>
+              <strong class="font-semibold">தாய் திருச்சபை:</strong>
+              <span class="ml-2"
+                >மேடவாக்கம் - சிஎஸ்ஐ தூய யோவான் திருச்சபை</span
+              >
+            </li>
+          </ul>
+        </div>
+        <p>
+          சித்தலப்பாக்கம் சிஎஸ்ஐ தூய அந்திரேயா திருச்சபை, 2021 ஆம் ஆண்டு
+          நிறுவப்பட்டது.
+        </p>
+        <p>
+          தூய அந்திரேயா திருச்சபை மேடவாக்கம் குருசேகரத்தின் ஒரு பகுதியாகும்.
+          ஆயர். அபிநாத் செல்வகுமார் தலைமையிலான சிஎஸ்ஐ தூய யோவான்
+          திருச்சபையின் அங்கமாக தூய அந்திரேயா திருச்சபை இணைக்கப்பட்டுள்ளது.
+        </p>
+        <p>
+          திருச்சபை சித்தலப்பாக்கத்தில் உள்ள TNHB (தமிழ்நாடு வீட்டுவசதி
+          வாரியம்) காலனியின் உள்ளூர் வளர்ச்சியுடன் பிணைக்கப்பட்டுள்ளது.
+        </p>
+        <p>
+          தேவபக்தியுள்ள, விசுவாசமுள்ள பல மக்களின் இடைவிடாத ஜெபம் மற்றும்
+          முயற்சியால் தூய அந்திரேயா திருச்சபைக்கான திட்டம் 2021ம் ஆண்டு முன்
+          எடுக்கப்பட்டது. தேவனின் மகத்தான கிருபையினால் ஒரு சிறிய திருச்சபை
+          நிறுவப்பட்டு, ஒரு சில குடும்பங்களுடன் திருச்சபை வழிபாடு
+          தொடங்கப்பட்டது.
+        </p>
+        <p>
+          சமீபத்திய ஆண்டுகளில் சித்தலப்பாக்கத்தில் தூய அந்திரேயா திருச்சபை
+          சீரான வளர்ச்சி அடைந்துள்ளது.
+        </p>
+      </div>
+      }
+    </div>
+
+    <!-- More Info Button -->
+    <div class="mt-12 text-center">
+        <a routerLink="/history" class="inline-block bg-primary-blue text-white font-bold py-3 px-8 rounded-full hover:bg-accent-blue transition-colors duration-300 shadow-lg transform hover:scale-105">
+            Our Journey of Faith
+        </a>
+    </div>
+
+  </div>
+</section>

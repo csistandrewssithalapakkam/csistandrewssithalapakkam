@@ -36,7 +36,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       @for (image of heroImagesService.heroImages(); track image) {
       <div class="relative group overflow-hidden rounded-lg shadow-md aspect-w-16 aspect-h-9">
-        <img [ngSrc]="image" alt="Banner image" class="w-full h-full object-cover" width="640" height="360" />
+        <img [src]="image" alt="Banner image" class="w-full h-full object-cover" />
         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <button (click)="removePhoto(image)" class="text-white p-2 rounded-full hover:bg-red-500/80 transition-colors" aria-label="Delete image">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
