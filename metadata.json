@@ -1,0 +1,5 @@
+{
+  "name": "Andrew's Church Quiz Portal",
+  "description": "An online quiz platform for Andrew's Church TNHB, featuring fellowship-specific quizzes and an admin panel for quiz creation.",
+  "requestFramePermissions": []
+}

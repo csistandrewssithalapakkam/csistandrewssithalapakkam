@@ -1,0 +1,181 @@
+<!-- Toast Notification -->
+@if (toastMessage(); as message) {
+  <div 
+    class="fixed top-24 right-6 z-[101] text-white py-3 px-6 rounded-lg shadow-lg animate-fade-in"
+    [class.bg-green-600]="toastType() === 'success'"
+    [class.bg-red-600]="toastType() === 'error'"
+  >
+    <p>{{ message }}</p>
+  </div>
+}
+
+<section class="bg-white p-8 rounded-lg shadow">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Manage Prayer Requests</h2>
+
+  <!-- Filters -->
+  <form [formGroup]="filterForm" class="p-4 mb-6 border rounded-lg bg-gray-50 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+      <div>
+        <label for="month" class="block text-sm font-medium text-gray-700">Filter by Month</label>
+        <select id="month" formControlName="month" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+          <option value="">All Months</option>
+          @for(month of months; track month; let i = $index) {
+            <option [value]="i">{{ month }}</option>
+          }
+        </select>
+      </div>
+        <div>
+        <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+        <input type="date" id="startDate" formControlName="startDate" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+      </div>
+        <div>
+        <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
+        <input type="date" id="endDate" formControlName="endDate" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+      </div>
+        <button type="button" (click)="clearFilters()" class="w-full md:w-auto px-4 py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 transition-colors">
+        Clear Filters
+      </button>
+  </form>
+
+  <!-- Tabs -->
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <button (click)="viewMode.set('active')"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        [class.border-primary-blue]="viewMode() === 'active'"
+        [class.text-primary-blue]="viewMode() === 'active'"
+        [class.border-transparent]="viewMode() !== 'active'"
+        [class.text-gray-500]="viewMode() !== 'active'"
+        [class.hover:text-gray-700]="viewMode() !== 'active'"
+        [class.hover:border-gray-300]="viewMode() !== 'active'">
+        Active Requests ({{ activeRequests().length }})
+      </button>
+      <button (click)="viewMode.set('archived')"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        [class.border-primary-blue]="viewMode() === 'archived'"
+        [class.text-primary-blue]="viewMode() === 'archived'"
+        [class.border-transparent]="viewMode() !== 'archived'"
+        [class.text-gray-500]="viewMode() !== 'archived'"
+        [class.hover:text-gray-700]="viewMode() !== 'archived'"
+        [class.hover:border-gray-300]="viewMode() !== 'archived'">
+        Archived Requests
+      </button>
+    </nav>
+  </div>
+
+  <!-- Content -->
+  <div class="mt-6">
+    @if(viewMode() === 'active') {
+      <div class="space-y-4">
+        @for(req of activeRequests(); track req.id) {
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div class="flex-grow">
+              <p class="text-gray-800">{{ req.request }}</p>
+              @if(req.email || req.mobile) {
+                <div class="text-xs text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  @if(req.email) {
+                    <span><strong>Email:</strong> {{ req.email }}</span>
+                  }
+                  @if(req.mobile) {
+                    <span><strong>Mobile:</strong> {{ req.mobile }}</span>
+                  }
+                </div>
+              }
+              <p class="text-xs text-gray-500 mt-2">Submitted: {{ req.submittedDate | date:'medium' }}</p>
+            </div>
+            @if(permissionService.canEdit('prayers')) {
+              <button (click)="openRemarksModal(req)" class="px-3 py-1.5 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition-colors text-sm flex-shrink-0">
+                Action Taken
+              </button>
+            }
+          </div>
+        } @empty {
+          <div class="text-center py-8 px-4 border-2 border-dashed rounded-lg">
+            @if(prayerRequestService.loading()) {
+              <p class="text-gray-500">Loading requests...</p>
+            } @else {
+              <p class="text-gray-500">No active prayer requests.</p>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Archived Requests -->
+      <div>
+        <div class="space-y-4">
+          @for(req of archivedRequests(); track req.id) {
+            <div class="bg-gray-100 border rounded-lg p-4">
+              <p class="text-gray-800">{{ req.request }}</p>
+               @if(req.email || req.mobile) {
+                <div class="text-xs text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  @if(req.email) {
+                    <span><strong>Email:</strong> {{ req.email }}</span>
+                  }
+                  @if(req.mobile) {
+                    <span><strong>Mobile:</strong> {{ req.mobile }}</span>
+                  }
+                </div>
+              }
+              @if(req.remarks) {
+                <p class="text-sm text-gray-700 mt-2 p-2 bg-gray-200 rounded"><strong>Remarks:</strong> {{ req.remarks }}</p>
+              }
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center text-xs text-gray-500 mt-2 gap-2">
+                <span>Submitted: {{ req.submittedDate | date:'medium' }}</span>
+                <span>Action Taken: {{ req.actionTakenDate | date:'medium' }}</span>
+              </div>
+            </div>
+          } @empty {
+            <div class="text-center py-8 px-4 border-2 border-dashed rounded-lg">
+              @if(prayerRequestService.loading()) {
+                <p class="text-gray-500">Loading requests...</p>
+              } @else {
+                 <p class="text-gray-500">No archived prayer requests match the current filters.</p>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Add Remarks Modal -->
+@if (isRemarksModalVisible() && selectedRequestForRemarks(); as request) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" (click)="closeRemarksModal()">
+  <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4" (click)="$event.stopPropagation()">
+    <form [formGroup]="remarksForm" (ngSubmit)="submitRemarks()">
+      <div class="p-6 border-b">
+        <h3 class="text-xl font-bold font-serif text-gray-800">Complete Prayer Request</h3>
+      </div>
+      <div class="p-6 space-y-4">
+        <div>
+          <p class="text-gray-700 mb-2"><strong>Request:</strong> {{ request.request }}</p>
+          <label for="remarks" class="block text-sm font-medium text-gray-700">Add Remarks (Optional)</label>
+          <textarea 
+            id="remarks" 
+            formControlName="remarks" 
+            rows="4"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue"
+            placeholder="e.g., Prayed for the request."
+          ></textarea>
+        </div>
+      </div>
+      <div class="p-6 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button type="button" (click)="closeRemarksModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          [disabled]="isSubmittingRemarks()"
+          class="px-4 py-2 bg-primary-blue text-white rounded-md hover:bg-accent-blue transition-colors disabled:bg-gray-400 disabled:cursor-wait"
+        >
+          @if(isSubmittingRemarks()) {
+            <span>Submitting...</span>
+          } @else {
+            <span>Submit</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}

@@ -1,0 +1,610 @@
+<div class="p-6 max-w-6xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Quiz Manager</h1>
+    @if (viewMode() === 'list') {
+    <div class="flex gap-4">
+      @if (quizzes().length > 0) {
+      <button mat-button color="primary"
+        (click)="loadDashboardData(quizzes()[0]?.id); selectedQuizForStats.set(quizzes()[0]); viewMode.set('dashboard')">
+        <mat-icon>dashboard</mat-icon> Quick Stats
+      </button>
+      }
+      <button mat-flat-button color="primary" (click)="viewMode.set('edit')">
+        <mat-icon>add</mat-icon> Create New Quiz
+      </button>
+    </div>
+    }
+  </div>
+
+  @switch (viewMode()) {
+  @case ('edit') {
+  <mat-card class="mb-8 overflow-hidden">
+    <mat-card-header class="bg-gray-50 border-b p-6">
+      <mat-card-title class="text-xl">{{ currentQuizId() ? 'Edit Quiz' : 'Create Quiz' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="p-8">
+      <form [formGroup]="quizForm" (ngSubmit)="saveQuiz()">
+
+        <!-- Quiz Meta -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Quiz Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g. Weekly Bible Quiz">
+            <mat-icon matIconPrefix class="mr-2 text-gray-400">title</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Quiz Type</mat-label>
+            <mat-select formControlName="type">
+              @for (type of quizTypes; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matIconPrefix class="mr-2 text-gray-400">category</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full mb-6">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3" placeholder="What is this quiz about?"></textarea>
+          <mat-icon matIconPrefix class="mr-2 text-gray-400">description</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full mb-6">
+          <mat-label>Final Submission Date (Optional)</mat-label>
+          <input matInput type="date" formControlName="end_date">
+          <mat-icon matIconPrefix class="mr-2 text-gray-400">event</mat-icon>
+        </mat-form-field>
+
+        <div class="mb-8 flex items-center gap-2">
+          <mat-checkbox formControlName="active" color="primary">
+            <span class="text-gray-700 font-medium">Make this quiz active and visible to users</span>
+          </mat-checkbox>
+        </div>
+
+        <mat-divider class="mb-8"></mat-divider>
+
+        <!-- Sections -->
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-gray-800">Sections</h3>
+          <button type="button" mat-flat-button color="primary" (click)="addSection()" class="rounded-lg px-6">
+            <mat-icon>add_circle</mat-icon> Add Section
+          </button>
+        </div>
+
+        <div formArrayName="sections">
+          <mat-accordion multi="true">
+            @for (section of sections.controls; track $index; let sIndex = $index) {
+            <mat-expansion-panel [formGroupName]="sIndex" [expanded]="true"
+              class="mb-4 border-2 border-blue-50 overflow-hidden shadow-sm">
+              <mat-expansion-panel-header class="bg-blue-50/50 py-4 h-auto">
+                <mat-panel-title class="flex items-center gap-4">
+                  <span class="section-number">{{ sIndex + 1 }}</span>
+                  <span class="font-bold text-lg">{{ section.get('title')?.value || 'Unnamed Section' }}</span>
+                </mat-panel-title>
+                <mat-panel-description class="flex items-center justify-end gap-4 w-full">
+                  <div class="points-badge">
+                    <mat-icon>stars</mat-icon> {{ getSectionTotalPoints(sIndex) }} pts
+                  </div>
+                  <span class="text-gray-500 hidden sm:inline">{{ getSectionQuestions(sIndex).length }} Questions</span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="pt-6">
+                <div class="flex gap-4 mb-6 items-start">
+                  <mat-form-field appearance="outline" class="flex-1">
+                    <mat-label>Section Title</mat-label>
+                    <input matInput formControlName="title" placeholder="e.g. Old Testament">
+                  </mat-form-field>
+                  <button type="button" mat-icon-button color="warn" (click)="removeSection(sIndex)"
+                    matTooltip="Delete Section">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <mat-form-field appearance="outline" class="w-full mb-6">
+                  <mat-label>Section Description (optional)</mat-label>
+                  <input matInput formControlName="description">
+                </mat-form-field>
+
+                <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                  <h4 class="text-lg font-bold text-gray-700">Questions</h4>
+                  <button type="button" mat-stroked-button color="primary" (click)="addQuestion(sIndex)">
+                    <mat-icon>add</mat-icon> Add Question at Top
+                  </button>
+                </div>
+
+                <div formArrayName="questions">
+                  <mat-accordion multi="true">
+                    @for (question of getSectionQuestions(sIndex).controls; track question.get('uid')?.value; let qIndex
+                    = $index) {
+                    <mat-expansion-panel [formGroupName]="qIndex" [expanded]="qIndex === 0"
+                      class="mb-4 question-panel border-l-4 border-l-blue-400">
+                      <mat-expansion-panel-header class="py-3 h-auto">
+                        <mat-panel-title class="flex items-center gap-3">
+                          <span class="question-number">Q{{ getSectionQuestions(sIndex).length - qIndex }}</span>
+                          <span class="font-medium truncate max-w-md">{{ question.get('text')?.value || 'New Question'
+                            }}</span>
+                        </mat-panel-title>
+                        <mat-panel-description class="flex items-center justify-end gap-3">
+                          <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">{{
+                            question.get('type')?.value }}</span>
+                          <span class="text-xs font-bold text-blue-600">{{ question.get('points')?.value }} pts</span>
+                          <button type="button" mat-icon-button color="warn" class="scale-90"
+                            (click)="removeQuestion(sIndex, qIndex); $event.stopPropagation()">
+                            <mat-icon>delete_outline</mat-icon>
+                          </button>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+
+                      <div class="pt-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                          <mat-form-field appearance="outline" class="md:col-span-3">
+                            <mat-label>Question Text</mat-label>
+                            <input matInput formControlName="text" placeholder="Enter your question here">
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Points</mat-label>
+                            <input matInput type="number" formControlName="points">
+                            <mat-icon matIconSuffix class="text-gray-300">stars</mat-icon>
+                          </mat-form-field>
+                        </div>
+
+                        <mat-form-field appearance="outline" class="w-full mb-6">
+                          <mat-label>Question Type</mat-label>
+                          <mat-select formControlName="type" (selectionChange)="onQuestionTypeChange(sIndex, qIndex)">
+                            @for (type of questionTypes; track type) {
+                            <mat-option [value]="type">{{ type }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+
+                        <!-- Image Question Fields -->
+                        @if (isImageType(question)) {
+                        <div class="mb-6 bg-purple-50 p-4 rounded-xl border border-purple-100">
+                          <h5 class="font-bold text-sm text-gray-600 uppercase tracking-wider mb-3">Question Image</h5>
+                          <div
+                            class="flex justify-center px-6 pt-5 pb-6 border-2 border-purple-200 border-dashed rounded-lg bg-white">
+                            <div class="space-y-2 text-center">
+                              @if (question.get('imageUrl')?.value) {
+                              <img [src]="question.get('imageUrl')?.value" alt="Question preview"
+                                class="mx-auto max-h-40 rounded-lg object-contain">
+                              } @else {
+                              <mat-icon class="text-purple-300 mx-auto" style="height:48px;width:48px;font-size:48px">add_photo_alternate</mat-icon>
+                              }
+                              <div class="flex justify-center text-sm text-gray-600">
+                                <label [for]="'img-upload-' + question.get('uid')?.value"
+                                  class="relative cursor-pointer rounded-md font-medium text-purple-600 hover:text-purple-700 focus-within:outline-none">
+                                  <span>{{ question.get('imageUrl')?.value ? 'Change image' : 'Upload image' }}</span>
+                                  <input [id]="'img-upload-' + question.get('uid')?.value" type="file" class="sr-only"
+                                    accept="image/png,image/jpeg,image/webp,image/gif"
+                                    (change)="onImageFileSelected(sIndex, qIndex, $event)">
+                                </label>
+                              </div>
+                              <p class="text-xs text-gray-400">PNG, JPG, WEBP</p>
+                            </div>
+                          </div>
+                          @if (!question.get('imageUrl')?.value && question.get('imageUrl')?.touched) {
+                          <p class="text-sm text-red-500 mt-1">An image is required.</p>
+                          }
+                          <div class="mt-4">
+                            <label class="font-bold text-sm text-gray-600 uppercase tracking-wider block mb-2">Answer
+                              Type</label>
+                            <mat-radio-group formControlName="imageAnswerType"
+                              (change)="onImageAnswerTypeChange(sIndex, qIndex)" class="flex gap-6">
+                              <mat-radio-button value="radio">Radio (Options)</mat-radio-button>
+                              <mat-radio-button value="text">Text Input</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </div>
+                        }
+
+                        <!-- Options -->
+                        @if (isOptionType(question)) {
+                        <div formArrayName="options" class="mb-6 bg-gray-50 p-4 rounded-xl">
+                          <div class="flex justify-between items-center mb-3">
+                            <h5 class="font-bold text-sm text-gray-600 uppercase tracking-wider">Options</h5>
+                            <button type="button" mat-button color="primary" (click)="addOption(sIndex, qIndex)">
+                              <mat-icon>add</mat-icon> Add Option
+                            </button>
+                          </div>
+                          @for (option of $any(question.get('options')).controls; track option; let oIndex = $index) {
+                          <div class="flex items-center gap-2 mb-2">
+                            <mat-form-field appearance="outline" class="flex-grow bg-white">
+                              <input matInput [formControlName]="oIndex" placeholder="Option {{ oIndex + 1 }}">
+                            </mat-form-field>
+                            <button type="button" mat-icon-button color="warn"
+                              (click)="removeOption(sIndex, qIndex, oIndex)">
+                              <mat-icon>remove_circle_outline</mat-icon>
+                            </button>
+                          </div>
+                          }
+                        </div>
+                        }
+
+                        <!-- Matches -->
+                        @if (isMatchType(question)) {
+                        <div formArrayName="matches" class="mb-6 bg-gray-50 p-4 rounded-xl">
+                          <div class="flex justify-between items-center mb-3">
+                            <h5 class="font-bold text-sm text-gray-600 uppercase tracking-wider">Match Pairs</h5>
+                            <button type="button" mat-button color="primary" (click)="addMatch(sIndex, qIndex)">
+                              <mat-icon>add</mat-icon> Add Pair
+                            </button>
+                          </div>
+                          @for (match of getMatches(sIndex, qIndex).controls; track match; let mIndex = $index) {
+                          <div [formGroupName]="mIndex" class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+                            <mat-form-field appearance="outline" class="bg-white">
+                              <input matInput formControlName="left" placeholder="Left">
+                            </mat-form-field>
+                            <div class="flex items-center gap-2">
+                              <mat-form-field appearance="outline" class="flex-grow bg-white">
+                                <input matInput formControlName="right" placeholder="Right">
+                              </mat-form-field>
+                              <button type="button" mat-icon-button color="warn"
+                                (click)="removeMatch(sIndex, qIndex, mIndex)">
+                                <mat-icon>remove_circle_outline</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+                          }
+                        </div>
+                        }
+
+                        <!-- Answer -->
+                        <div class="mt-4 p-5 bg-green-50/50 rounded-2xl border border-green-100">
+                          <div class="flex items-center gap-2 mb-4">
+                            <mat-icon class="text-green-600">check_circle</mat-icon>
+                            <h5 class="font-bold text-gray-800">Set Correct Answer</h5>
+                          </div>
+
+                          <div class="pl-8">
+                            @switch (question.get('type')?.value) {
+                            @case (QuestionType.SingleSelect) {
+                            <mat-radio-group formControlName="answer" [name]="'ans-' + question.get('uid')?.value"
+                              class="flex flex-col gap-3">
+                              @for (option of $any(question.get('options')).controls; track option; let oIndex = $index)
+                              {
+                              <mat-radio-button [value]="option.value" [disabled]="!option.value">
+                                <span class="text-gray-700">{{ option.value || 'Option ' + (oIndex + 1) }}</span>
+                              </mat-radio-button>
+                              }
+                            </mat-radio-group>
+                            }
+                            @case (QuestionType.MultiSelect) {
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              @for (option of $any(question.get('options')).controls; track option; let oIndex = $index)
+                              {
+                              <mat-checkbox [checked]="isMultiSelectChecked(question, option.value)"
+                                [disabled]="!option.value"
+                                (change)="toggleMultiSelectAnswer(question, option.value, $event.checked)">
+                                <span class="text-gray-700">{{ option.value || 'Option ' + (oIndex + 1) }}</span>
+                              </mat-checkbox>
+                              }
+                            </div>
+                            @if (!question.get('answer')?.value) {
+                            <p class="text-xs text-red-500 mt-2">Select at least one correct answer</p>
+                            }
+                            }
+                            @case (QuestionType.TrueFalse) {
+                            <mat-radio-group formControlName="answer" [name]="'tf-' + question.get('uid')?.value"
+                              class="flex gap-8">
+                              <mat-radio-button value="true" class="text-green-600 font-bold">TRUE</mat-radio-button>
+                              <mat-radio-button value="false" class="text-red-600 font-bold">FALSE</mat-radio-button>
+                            </mat-radio-group>
+                            }
+                            @case (QuestionType.FillInTheBlanks) {
+                            <mat-form-field appearance="outline" class="w-full bg-white">
+                              <input matInput formControlName="answer" placeholder="Exact correct text">
+                            </mat-form-field>
+                            }
+                            @case (QuestionType.Matches) {
+                            <p class="text-sm text-blue-600 italic">Matching pairs are automatically scored based on
+                              their links defined above.</p>
+                            }
+                            @case (QuestionType.ImageQuestion) {
+                            @if (question.get('imageAnswerType')?.value === 'radio') {
+                            <mat-radio-group formControlName="answer"
+                              [name]="'img-' + question.get('uid')?.value" class="flex flex-col gap-3">
+                              @for (option of $any(question.get('options')).controls; track option; let oIndex = $index) {
+                              <mat-radio-button [value]="option.value" [disabled]="!option.value">
+                                <span class="text-gray-700">{{ option.value || 'Option ' + (oIndex + 1) }}</span>
+                              </mat-radio-button>
+                              }
+                            </mat-radio-group>
+                            } @else {
+                            <mat-form-field appearance="outline" class="w-full bg-white">
+                              <input matInput formControlName="answer" placeholder="Exact correct text">
+                            </mat-form-field>
+                            }
+                            }
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel>
+                    }
+                  </mat-accordion>
+                </div>
+              </div>
+            </mat-expansion-panel>
+            }
+          </mat-accordion>
+
+          @if (sections.length === 0) {
+          <div class="empty-state p-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 mt-6">
+            <mat-icon class="text-gray-300 transform scale-150 mb-4"
+              style="height:48px;width:48px;font-size:48px">folder_open</mat-icon>
+            <p class="text-gray-500 text-lg">No sections yet. Start by adding your first section.</p>
+          </div>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-4 mt-8 pt-8 border-t">
+          <button type="button" mat-button (click)="cancelEdit()">Cancel</button>
+          <button type="button" mat-stroked-button color="accent" (click)="showJsonPreview()">
+            <mat-icon>data_object</mat-icon> Preview API JSON
+          </button>
+          <button type="submit" mat-flat-button color="primary" class="px-8">
+            {{ currentQuizId() ? 'Update Quiz' : 'Create Quiz' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  @case ('dashboard') {
+  <div class="animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div class="flex items-center gap-4 mb-8">
+      <button mat-icon-button (click)="cancelEdit()" class="hover:bg-gray-100 transition-colors">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h2 class="text-3xl font-bold text-gray-900">{{ selectedQuizForStats()?.title }} Dashboard</h2>
+        <p class="text-gray-500 font-medium">Detailed metrics and performance metrics</p>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <mat-card
+        class="bg-gradient-to-br from-indigo-600 to-blue-700 text-white overflow-hidden relative group shadow-xl">
+        <div class="p-8 relative z-10">
+          <p class="text-blue-100 text-xs font-black uppercase tracking-[0.2em] mb-2">Attended</p>
+          <h3 class="text-5xl font-black">{{ statsData()?.attended || 0 }}</h3>
+          <mat-icon
+            class="absolute -right-4 -bottom-4 text-blue-400/20 scale-[4] transform rotate-12 group-hover:scale-[4.5] transition-transform duration-700">people</mat-icon>
+        </div>
+      </mat-card>
+
+      <mat-card
+        class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white overflow-hidden relative group shadow-xl">
+        <div class="p-8 relative z-10">
+          <p class="text-emerald-100 text-xs font-black uppercase tracking-[0.2em] mb-2">Submitted</p>
+          <h3 class="text-5xl font-black">{{ statsData()?.submitted || 0 }}</h3>
+          <mat-icon
+            class="absolute -right-4 -bottom-4 text-emerald-400/20 scale-[4] transform rotate-12 group-hover:scale-[4.5] transition-transform duration-700">task_alt</mat-icon>
+        </div>
+      </mat-card>
+
+      <mat-card
+        class="bg-gradient-to-br from-orange-600 to-amber-700 text-white overflow-hidden relative group shadow-xl">
+        <div class="p-8 relative z-10">
+          <p class="text-orange-100 text-xs font-black uppercase tracking-[0.2em] mb-2">Saved Drafts</p>
+          <h3 class="text-5xl font-black">{{ statsData()?.saved || 0 }}</h3>
+          <mat-icon
+            class="absolute -right-4 -bottom-4 text-orange-400/20 scale-[4] transform rotate-12 group-hover:scale-[4.5] transition-transform duration-700">save</mat-icon>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Leaderboard -->
+      <mat-card class="lg:col-span-2 overflow-hidden shadow-2xl border-none rounded-[2rem]">
+        <mat-card-header class="bg-slate-900 text-white p-8 border-none">
+          <mat-card-title class="text-xl font-black flex items-center gap-3">
+            <mat-icon class="text-amber-400 scale-125">emoji_events</mat-icon> Top 10 Leaderboard
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="p-0">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">
+                <tr>
+                  <th class="px-8 py-5">Rank</th>
+                  <th class="px-8 py-5">User Profile</th>
+                  <th class="px-8 py-5">Status</th>
+                  <th class="px-8 py-5 text-right">Score</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                @for (entry of leaderboard(); track entry.mobile; let last = $last) {
+                <tr class="hover:bg-indigo-50/50 transition-all group cursor-default">
+                  <td class="px-8 py-6">
+                    <div
+                      class="w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all"
+                      [class]="entry.rank === 1 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg' : 
+                                      entry.rank === 2 ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-lg' : 
+                                      entry.rank === 3 ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white shadow-lg' : 
+                                      'bg-slate-50 text-slate-400 border border-slate-100'">
+                      {{ entry.rank }}
+                    </div>
+                  </td>
+                  <td class="px-8 py-6">
+                    <div class="flex flex-col">
+                      <span class="font-black text-slate-800 text-base">{{ entry.userName }}</span>
+                      <span class="text-xs font-medium text-slate-400">{{ entry.mobile }}</span>
+                    </div>
+                  </td>
+                  <td class="px-8 py-6">
+                    <span
+                      class="text-[9px] font-black uppercase px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">Submitted</span>
+                  </td>
+                  <td class="px-8 py-6 text-right">
+                    <span class="font-black text-indigo-600 text-2xl tracking-tighter">{{ entry.score }}</span>
+                    <span class="text-[10px] font-black text-slate-300 uppercase ml-1">pts</span>
+                  </td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="4" class="px-8 py-20 text-center">
+                    <p class="text-slate-400 font-bold text-lg italic">No performance data yet</p>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Score Distribution -->
+      <mat-card class="shadow-2xl border-none overflow-hidden rounded-[2rem]">
+        <mat-card-header class="bg-indigo-600 text-white p-8 border-none">
+          <mat-card-title class="text-xl font-black flex items-center gap-3">
+            <mat-icon class="text-white">insights</mat-icon> Analytics
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="p-8">
+          <div class="flex items-end justify-between h-72 gap-3 px-2 mt-12 mb-8">
+            @for (bucket of getScoreDistribution(); track $index) {
+            <div class="flex-1 flex flex-col items-center gap-4 h-full justify-end">
+              <div
+                class="w-full bg-gradient-to-t from-indigo-500 to-blue-400 rounded-2xl transition-all duration-700 hover:scale-105 relative group shadow-lg"
+                [style.height.%]="(bucket.count / (leaderboard().length || 1)) * 100 + 5">
+                <div
+                  class="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap font-bold shadow-xl border border-slate-700">
+                  {{ bucket.count }} users
+                </div>
+              </div>
+              <span
+                class="text-[9px] text-slate-400 font-black uppercase tracking-widest rotate-[-45deg] whitespace-nowrap mt-4">{{
+                bucket.label }}</span>
+            </div>
+            }
+          </div>
+          <div class="mt-16 space-y-4 pt-8 border-t border-slate-50">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 text-xs font-black uppercase tracking-wider">Top Score</span>
+              <span class="font-black text-indigo-600">{{ leaderboard()[0]?.score || 0 }} PTS</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 text-xs font-black uppercase tracking-wider">Total Participation</span>
+              <span class="font-black text-slate-800">{{ statsData()?.submitted || 0 }} ENTRIES</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  }
+
+  @default {
+  <!-- List View -->
+  @if (isLoading()) {
+  <div class="flex flex-col items-center justify-center p-20 text-blue-500">
+    <mat-spinner diameter="40" class="mb-4"></mat-spinner>
+    <p class="animate-pulse font-medium">Fetching quizzes from API...</p>
+  </div>
+  } @else if (quizzes().length === 0) {
+  <div class="max-w-2xl mx-auto p-12 text-center bg-white rounded-3xl border border-slate-100 shadow-sm mt-10">
+    <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+      <mat-icon class="text-blue-500" style="height:40px;width:40px;font-size:40px">post_add</mat-icon>
+    </div>
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">No quizzes available</h2>
+    <p class="text-slate-500 mb-8">You haven't created any quizzes yet. Click the button above to build your first
+      bible
+      quiz!</p>
+    <button mat-flat-button color="primary" (click)="viewMode.set('edit')" class="rounded-xl px-8 py-2 h-auto">
+      <mat-icon>add</mat-icon> Create New Quiz
+    </button>
+  </div>
+  } @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (quiz of quizzes(); track quiz.id) {
+    <mat-card class="hover:shadow-xl transition-all duration-300 border-l-4 group"
+      [class.border-l-indigo-500]="quiz.active" [class.border-l-slate-300]="!quiz.active">
+      <mat-card-header class="pb-2">
+        <div class="flex flex-col w-full">
+          <div class="flex justify-between items-start mb-1">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+              {{ quiz.type }}
+            </span>
+            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded"
+              [class]="quiz.active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-400'">
+              {{ quiz.active ? 'Active' : 'Draft' }}
+            </span>
+          </div>
+          <mat-card-title class="group-hover:text-indigo-600 transition-colors">{{ quiz.title }}</mat-card-title>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="pt-2">
+        <p class="text-slate-500 text-sm line-clamp-2 mb-6 min-h-[40px]">{{ quiz.description || 'No description
+          provided'
+          }}</p>
+
+        <div class="grid grid-cols-2 gap-3 mb-2">
+          <div class="bg-indigo-50/50 p-3 rounded-2xl flex flex-col items-center border border-indigo-50">
+            <span class="text-xs text-indigo-400 font-bold uppercase mb-1">Questions</span>
+            <span class="text-xl font-black text-indigo-700">{{ getQuizTotalQuestions(quiz) }}</span>
+          </div>
+          <div class="bg-amber-50/50 p-3 rounded-2xl flex flex-col items-center border border-amber-50">
+            <span class="text-xs text-amber-400 font-bold uppercase mb-1">Total Points</span>
+            <span class="text-xl font-black text-amber-700">{{ getQuizTotalPoints(quiz) }}</span>
+          </div>
+        </div>
+
+        <div class="min-h-[32px] mt-4">
+          @if (quiz.end_date) {
+          <div class="flex items-center gap-2 text-xs text-amber-500 font-medium">
+            <mat-icon class="scale-75 origin-left">event_busy</mat-icon>
+            <span>Final Submission: {{ quiz.end_date | date:'mediumDate' }}</span>
+          </div>
+          }
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <mat-card-actions align="end" class="bg-slate-50/50 px-4">
+        <button mat-button color="primary" (click)="editQuiz(quiz)" class="font-bold">
+          <mat-icon>edit</mat-icon> Manage
+        </button>
+        <button mat-button color="primary" (click)="showDashboard(quiz)" class="font-bold">
+          <mat-icon>insights</mat-icon> Dashboard
+        </button>
+        <button mat-button [color]="quiz.is_freezed ? 'accent' : 'warn'"
+          (click)="freezeQuiz(quiz); $event.stopPropagation(); $event.preventDefault();"
+          [disabled]="quiz.is_freezed || !quiz.active" class="font-bold">
+          <mat-icon>{{ quiz.is_freezed ? 'ac_unit' : 'lock' }}</mat-icon>
+          {{ quiz.is_freezed ? 'Frozen' : 'Freeze' }}
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteQuiz(quiz.id)">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+  }
+  }
+  }
+</div>
+
+<!-- JSON Modal -->
+@if (previewJson()) {
+<div class="json-modal-overlay" (click)="closeJsonPreview()">
+  <div class="json-modal-box" (click)="$event.stopPropagation()">
+    <div class="json-modal-header">
+      <div class="flex items-center gap-2">
+        <mat-icon class="text-blue-400">data_object</mat-icon>
+        <h2 class="text-xl font-bold">API Payload Preview</h2>
+      </div>
+      <button mat-icon-button (click)="closeJsonPreview()"><mat-icon>close</mat-icon></button>
+    </div>
+    <div class="p-6 overflow-auto bg-slate-900 border-t border-slate-800">
+      <pre class="text-green-400 font-mono text-sm leading-relaxed">{{ previewJson() }}</pre>
+    </div>
+  </div>
+</div>
+}

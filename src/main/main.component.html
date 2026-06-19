@@ -1,0 +1,59 @@
+<main class="w-full">
+  <app-header></app-header>
+  <app-hero></app-hero>
+
+  <!-- Info Bar: Quiz & Sunday Service -->
+  <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-md relative overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute inset-0 bg-white opacity-5 mix-blend-overlay"></div>
+
+    <div class="container mx-auto px-4 py-3 relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <!-- Left: Quiz CTA (Temporarily Hidden) -->
+
+      <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 text-center md:text-left">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-300 flex-shrink-0" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span class="font-bold font-serif whitespace-normal sm:whitespace-nowrap text-sm sm:text-base">Bible Knowledge
+          Quiz:</span>
+        <span class="text-blue-100 text-xs sm:text-sm">Test your understanding.</span>
+        <a routerLink="/quiz"
+          class="inline-flex items-center gap-1 bg-white text-indigo-700 hover:bg-blue-50 text-xs font-bold py-1 px-3 rounded-full shadow transition-colors whitespace-nowrap">
+          Start Quiz
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+
+
+      <!-- Right: Sunday Service Info -->
+      <div
+        class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-1.5 text-xs sm:text-sm border border-white/20 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent-blue flex-shrink-0" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="font-semibold text-white">Sunday Service:</span>
+        <span class="text-blue-100">8:30 AM (4th Sunday HC: 9:00 AM)</span>
+      </div>
+
+    </div>
+  </div>
+
+  <app-daily-verse></app-daily-verse>
+  <app-welcome-message></app-welcome-message>
+  <app-our-services></app-our-services>
+  <app-social-services></app-social-services>
+  <app-fellowship-groups></app-fellowship-groups>
+  <app-milestones></app-milestones>
+  <app-events></app-events>
+  <app-gallery></app-gallery>
+  <app-missionary-spotlight></app-missionary-spotlight>
+  <app-prayer-request></app-prayer-request>
+  <app-visit-us></app-visit-us>
+  <app-footer></app-footer>
+</main>

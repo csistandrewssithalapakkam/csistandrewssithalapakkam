@@ -1,0 +1,557 @@
+<div class="min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mx-auto">
+
+    @if (!currentUser()) {
+    <!-- Registration Form -->
+    <mat-card class="registration-card shadow-2xl border-0 rounded-3xl overflow-hidden">
+      <div class="bg-indigo-600 p-8 text-white text-center">
+        <h2 class="text-3xl font-black mb-2">Register to Start</h2>
+        <p class="text-indigo-100 opacity-80">Please provide your details to begin the quiz</p>
+      </div>
+
+      <mat-card-content class="p-8">
+        <form [formGroup]="userForm" (ngSubmit)="saveUser()" class="space-y-6 pt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="name" placeholder="Enter your name">
+              <mat-icon matIconSuffix class="text-indigo-300">person</mat-icon>
+              <mat-error>Name is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Mobile Number</mat-label>
+              <input matInput formControlName="mobile" placeholder="10-12 digits">
+              <mat-icon matIconSuffix class="text-indigo-300">phone</mat-icon>
+              <mat-error>Enter a valid mobile number</mat-error>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Subscription ID (Optional)</mat-label>
+            <input matInput formControlName="subscriptionId" placeholder="Enter ID if applicable">
+            <mat-icon matIconSuffix class="text-indigo-300">card_membership</mat-icon>
+          </mat-form-field>
+
+          <div class="space-y-4">
+            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Address Details (Optional)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Address Line 1</mat-label>
+                <input matInput formControlName="address1">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Address Line 2</mat-label>
+                <input matInput formControlName="address2">
+              </mat-form-field>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Pincode</mat-label>
+                <input matInput formControlName="pincode">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="pt-4">
+            <button mat-flat-button color="primary" type="submit" [disabled]="userForm.invalid"
+              class="w-full py-6 rounded-2xl text-lg font-bold">
+              Register &amp; Continue
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    } @else if (!quizStarted()) {
+    <!-- Welcome Back / Start Quiz -->
+    <mat-card class="welcome-card text-center shadow-2xl border-0 rounded-3xl overflow-hidden p-12">
+      <div class="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-8 text-indigo-600">
+        <mat-icon style="height:48px;width:48px;font-size:48px">waving_hand</mat-icon>
+      </div>
+
+      <h1 class="text-4xl font-black text-slate-800 mb-4">Welcome back, {{ currentUser()?.name }}!</h1>
+
+      @if (quizStatus() === 'submitted') {
+      <p class="text-green-600 font-bold text-lg mb-4">✅ You already submitted this quiz.</p>
+      } @else if (quizStatus() === 'saved') {
+      <p class="text-amber-600 font-semibold text-lg mb-4">💾 You have a saved attempt. Continue from where you left
+        off.</p>
+      } @else {
+      <p class="text-slate-500 text-lg mb-12">We've loaded your details from earlier. Ready to take the quiz?</p>
+      }
+
+      <div
+        class="bg-slate-50 border border-slate-100 rounded-2xl p-6 mb-12 text-left inline-block mx-auto min-w-[300px]">
+        <div class="flex items-center gap-3 mb-2">
+          <mat-icon class="text-indigo-400">person</mat-icon>
+          <span class="font-bold text-slate-700">{{ currentUser()?.name }}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <mat-icon class="text-indigo-400">phone</mat-icon>
+          <span class="text-slate-500">{{ currentUser()?.mobile }}</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button mat-flat-button color="primary" (click)="startQuiz()" [disabled]="isLoadingHistory()"
+          class="px-10 py-6 rounded-2xl text-lg font-bold shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 min-w-[200px]">
+          @if (isLoadingHistory()) {
+          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+          <span>Checking records...</span>
+          } @else {
+          {{ quizStatus() === 'submitted' ? 'View My Results' : quizStatus() === 'saved' ? 'Continue Quiz' : 'Start Quiz
+          Now' }}
+          }
+        </button>
+        <button mat-stroked-button color="warn" (click)="changeUser()" [disabled]="isLoadingHistory()"
+          class="px-10 py-6 rounded-2xl text-lg font-bold">
+          Change User
+        </button>
+      </div>
+    </mat-card>
+    } @else {
+    <!-- Quiz Taker -->
+    @if (quiz(); as q) {
+    @if (!isFinished()) {
+    <!-- Progress Bar & Header -->
+    <div class="mb-4">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-4">
+        <div class="flex gap-4 items-start">
+          <button mat-icon-button (click)="goBack()" matTooltip="Back to Dashboard"
+            class="bg-gray-100 hover:bg-gray-200 transition-colors flex-shrink-0">
+            <mat-icon class="text-gray-600">arrow_back</mat-icon>
+          </button>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">{{ q.title }}</h1>
+            <p class="text-gray-500 mt-1">Question {{ currentQuestionIndex() + 1 }} of {{ allQuestions().length }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          @if (quizStatus() === 'saved') {
+          <span class="px-2 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">💾 Saved</span>
+          }
+          <span class="text-sm font-medium text-blue-600">{{ progress() | number:'1.0-0' }}% Complete</span>
+        </div>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="progress()" class="rounded-full"></mat-progress-bar>
+    </div>
+
+    <!-- Question Navigator -->
+    <div class="mb-6 flex gap-2 overflow-x-auto pb-4 pt-2 -mx-2 px-2 snap-x rounded-xl" style="scrollbar-width: thin;">
+      @for (q of allQuestions(); track q.id; let i = $index) {
+      <button (click)="currentQuestionIndex.set(i)"
+        class="w-10 h-10 rounded-xl text-sm font-bold transition-all flex-shrink-0 flex items-center justify-center snap-start border hover:-translate-y-0.5"
+        [ngClass]="{
+                  'bg-indigo-600 text-white shadow-md shadow-indigo-200 border-indigo-600': currentQuestionIndex() === i,
+                  'bg-green-50 text-green-700 border-green-200': currentQuestionIndex() !== i && isAnswered(q.id!),
+                  'bg-white text-slate-500 border-slate-200': currentQuestionIndex() !== i && !isAnswered(q.id!)
+                }">
+        {{ i + 1 }}
+      </button>
+      }
+    </div>
+
+    @if (currentQuestion(); as question) {
+    <mat-card class="mb-6 shadow-sm border-0 rounded-2xl overflow-hidden">
+      <mat-card-content class="p-8">
+        <div class="flex items-center gap-2 mb-6">
+          <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wider">
+            {{ question.type }}
+          </span>
+          <span class="text-gray-400 text-xs">•</span>
+          <span class="text-gray-500 text-xs">{{ question.points }} Points</span>
+        </div>
+
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 leading-tight">
+          {{ question.text }}
+        </h2>
+
+        @if (question.imageUrl) {
+        <div class="mb-6 flex justify-center">
+          <img [src]="question.imageUrl" alt="Question image"
+            class="max-w-full max-h-64 rounded-xl object-contain border border-gray-100 shadow-sm">
+        </div>
+        }
+
+        <div class="space-y-3">
+          @switch (question.type) {
+          @case ('Single Select') {
+          <mat-radio-group [ngModel]="userAnswers()[question.id!]" (ngModelChange)="onAnswerChange($event)"
+            [disabled]="quizStatus() === 'submitted'" class="flex flex-col gap-3">
+            @for (option of question.options; track option) {
+            <label
+              class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer w-full">
+              <mat-radio-button [value]="option" class="flex-shrink-0"></mat-radio-button>
+              <span class="text-base text-gray-700">{{ option }}</span>
+            </label>
+            }
+          </mat-radio-group>
+          }
+
+          @case ('Multi Select') {
+          <div class="flex flex-col gap-3">
+            @for (option of question.options; track option) {
+            <label
+              class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer w-full">
+              <mat-checkbox [checked]="userAnswers()[question.id!]?.includes(option)"
+                (change)="onMultiSelectChange(option, $event.checked)" [disabled]="quizStatus() === 'submitted'"
+                class="flex-shrink-0">
+              </mat-checkbox>
+              <span class="text-base text-gray-700">{{ option }}</span>
+            </label>
+            }
+          </div>
+          }
+
+          @case ('True or False') {
+          <mat-radio-group [ngModel]="userAnswers()[question.id!]" (ngModelChange)="onAnswerChange($event)"
+            [disabled]="quizStatus() === 'submitted'" class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+            <label
+              class="flex-1 flex items-center gap-3 p-6 border border-gray-200 rounded-xl hover:bg-green-50 transition-colors cursor-pointer">
+              <mat-radio-button value="true" class="flex-shrink-0"></mat-radio-button>
+              <span class="text-xl font-bold text-green-700">TRUE</span>
+            </label>
+            <label
+              class="flex-1 flex items-center gap-3 p-6 border border-gray-200 rounded-xl hover:bg-red-50 transition-colors cursor-pointer">
+              <mat-radio-button value="false" class="flex-shrink-0"></mat-radio-button>
+              <span class="text-xl font-bold text-red-700">FALSE</span>
+            </label>
+          </mat-radio-group>
+          }
+
+          @case ('Fill in the blanks') {
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Your Answer</mat-label>
+            <input matInput [ngModel]="userAnswers()[question.id!]" (ngModelChange)="onAnswerChange($event)"
+              [readonly]="quizStatus() === 'submitted'" placeholder="Type your answer here...">
+          </mat-form-field>
+          }
+
+          @case ('Image Question') {
+          @if (question.imageAnswerType === 'radio') {
+          <mat-radio-group [ngModel]="userAnswers()[question.id!]" (ngModelChange)="onAnswerChange($event)"
+            [disabled]="quizStatus() === 'submitted'" class="flex flex-col gap-3">
+            @for (option of question.options; track option) {
+            <label
+              class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer w-full">
+              <mat-radio-button [value]="option" class="flex-shrink-0"></mat-radio-button>
+              <span class="text-base text-gray-700">{{ option }}</span>
+            </label>
+            }
+          </mat-radio-group>
+          } @else {
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Your Answer</mat-label>
+            <input matInput [ngModel]="userAnswers()[question.id!]" (ngModelChange)="onAnswerChange($event)"
+              [readonly]="quizStatus() === 'submitted'" placeholder="Type your answer here...">
+          </mat-form-field>
+          }
+          }
+
+          @case ('Matches') {
+          <div class="space-y-4">
+            <p class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-2">
+              Match each item on the left with the correct item on the right:
+            </p>
+            @for (match of question.matches; track $index; let mIdx = $index) {
+            <div class="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+              <div class="flex-1 font-semibold text-gray-800">{{ match.left }}</div>
+              <mat-icon class="text-blue-300 flex-shrink-0">compare_arrows</mat-icon>
+              <div class="flex-1">
+                <select
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  [ngModel]="getMatchAnswer(question.id!, mIdx)"
+                  (ngModelChange)="onMatchChange(question.id!, mIdx, $event, question.matches!.length)"
+                  [disabled]="quizStatus() === 'submitted'">
+                  <option value="" disabled selected>-- Select a match --</option>
+                  @for (opt of question.matches; track $index) {
+                  <option [value]="opt.right">{{ opt.right }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            }
+          </div>
+          }
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Navigation + Save/Submit Buttons -->
+    <div class="flex flex-wrap justify-between items-center gap-3 pb-20">
+      <button mat-stroked-button color="primary" (click)="previousQuestion()" [disabled]="currentQuestionIndex() === 0">
+        <mat-icon>chevron_left</mat-icon> Previous
+      </button>
+
+      <div class="flex gap-3 flex-wrap justify-end">
+        <!-- Save Progress -->
+        @if (quizStatus() !== 'submitted') {
+        <button mat-stroked-button color="accent" (click)="saveAnswers()" [disabled]="isSaving()"
+          matTooltip="Save your progress and continue later">
+          <mat-icon>save</mat-icon>
+          {{ isSaving() ? 'Saving...' : 'Save Progress' }}
+        </button>
+        }
+
+        @if (!isLastQuestion()) {
+        <button mat-flat-button color="primary" class="px-6" (click)="nextQuestion()">
+          Next <mat-icon>chevron_right</mat-icon>
+        </button>
+        } @else {
+        <!-- Last question: show Submit -->
+        @if (quizStatus() !== 'submitted') {
+        <button mat-flat-button color="warn" class="px-6" (click)="submitQuiz()" [disabled]="isSubmitting()">
+          <mat-icon>send</mat-icon>
+          {{ isSubmitting() ? 'Submitting...' : 'Submit Quiz' }}
+        </button>
+        }
+        }
+      </div>
+    </div>
+    }
+    } @else {
+    <!-- Finished / Result View -->
+    <mat-card class="text-center p-12 shadow-xl border-0 rounded-3xl overflow-hidden relative">
+      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+      <mat-card-content>
+        <div class="mb-8">
+          <div class="inline-flex items-center justify-center w-24 h-24 bg-blue-100 rounded-full mb-6">
+            <mat-icon class="text-blue-600" style="height:48px;width:48px;font-size:48px">emoji_events</mat-icon>
+          </div>
+          <h1 class="text-4xl font-black text-gray-900 mb-2">
+            {{ quizStatus() === 'submitted' ? 'Quiz Submitted!' : 'Quiz Complete!' }}
+          </h1>
+          <p class="text-xl text-gray-500">Great job, {{ currentUser()?.name }}!</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-3xl p-10 mb-10 border border-gray-100">
+          <p class="text-gray-500 uppercase tracking-widest font-bold text-sm mb-2">Your Score</p>
+          <div class="text-7xl font-black text-blue-600 mb-2">
+            {{ score() }} <span class="text-3xl text-gray-300">/ {{ submitResult()?.total_points || getTotalPoints()
+              }}</span>
+          </div>
+          @if (submitResult()?.percentage !== undefined) {
+          <p class="text-2xl font-bold text-indigo-500">{{ submitResult()?.percentage }}%</p>
+          }
+        </div>
+
+        <!-- Top 10 Leaderboard (names only) -->
+        @if (topNames().length > 0) {
+        <div class="mb-8">
+          <h3 class="text-lg font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <mat-icon class="text-amber-500">emoji_events</mat-icon> Top 10 Participants
+          </h3>
+          <ol class="space-y-2">
+            @for (name of topNames(); track $index; let i = $index) {
+            <li class="flex items-center gap-3 px-4 py-3 rounded-xl border"
+              [ngClass]="{
+                'bg-amber-50 border-amber-200': i === 0,
+                'bg-slate-50 border-slate-200': i === 1,
+                'bg-orange-50 border-orange-200': i === 2,
+                'bg-gray-50 border-gray-100': i > 2
+              }">
+              <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
+                [ngClass]="{
+                  'bg-amber-400 text-white': i === 0,
+                  'bg-slate-400 text-white': i === 1,
+                  'bg-orange-400 text-white': i === 2,
+                  'bg-gray-200 text-gray-600': i > 2
+                }">{{ i + 1 }}</span>
+              <span class="font-semibold text-gray-800">{{ name }}</span>
+            </li>
+            }
+          </ol>
+        </div>
+        }
+
+        <!-- Read-only answer review (only for submitted) -->
+        @if (quizStatus() === 'submitted' && submitResult()?.answers) {
+        <div class="text-left mb-8">
+          <h3 class="text-lg font-bold text-gray-700 mb-4">Answer Review</h3>
+          @for (question of allQuestions(); track question.id) {
+          @let result = getAnswerResult(question.id!);
+          <div class="mb-4 p-4 rounded-2xl border" [ngClass]="{
+              'bg-green-50 border-green-200': result?.is_correct === true,
+              'bg-red-50 border-red-200': result?.is_correct === false,
+              'bg-gray-50 border-gray-200': result?.is_correct === undefined
+            }">
+            <div class="flex items-start gap-2 mb-2">
+              @if (result?.is_correct !== undefined) {
+              <mat-icon [class]="result?.is_correct ? 'text-green-500' : 'text-red-500'">
+                {{ result?.is_correct ? 'check_circle' : 'cancel' }}
+              </mat-icon>
+              }
+              <p class="font-semibold text-gray-800">{{ question.text }}</p>
+            </div>
+            <p class="text-sm text-gray-600" [ngClass]="{'ml-8': result?.is_correct !== undefined}">
+              <strong>Your answer:</strong> {{ (result?.user_answer ?? result?.answer) | json }}
+            </p>
+            @if (result?.is_correct === false && result?.correct_answer !== undefined) {
+            <p class="text-sm text-green-700 font-medium" [ngClass]="{'ml-8': result?.is_correct !== undefined}">
+              <strong>Correct answer:</strong> {{ result?.correct_answer | json }}
+            </p>
+            }
+          </div>
+          }
+        </div>
+        }
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button mat-flat-button color="primary" class="px-10 py-4 text-lg rounded-xl" routerLink="/quiz">
+            Back to Quizzes
+          </button>
+          @if (quizStatus() !== 'submitted') {
+          <button mat-stroked-button color="primary" class="px-10 py-4 text-lg rounded-xl"
+            (click)="isFinished.set(false); currentQuestionIndex.set(0); userAnswers.set({})">
+            Try Again
+          </button>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
+    } @else {
+    <div class="flex flex-col items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+      <p class="text-gray-500 font-medium">Loading your quiz...</p>
+    </div>
+    }
+    }
+  </div>
+</div>
+
+<!-- End of Document --><!-- Submit Result Popup -->
+@if (showResultPopup() && submitResult()) {
+<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in duration-300">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-white text-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+        <mat-icon style="height:40px;width:40px;font-size:40px">emoji_events</mat-icon>
+      </div>
+      <h2 class="text-3xl font-black mb-1">Quiz Submitted!</h2>
+      <p class="text-indigo-100 opacity-80">Well done, {{ currentUser()?.name }}!</p>
+    </div>
+
+    <!-- Score -->
+    <div class="p-8 text-center border-b border-slate-100">
+      <p class="text-slate-400 uppercase tracking-widest font-bold text-xs mb-2">Your Score</p>
+      <div class="text-6xl font-black text-indigo-600 mb-1">
+        {{ submitResult()?.score }}
+        <span class="text-2xl text-gray-300">/ {{ submitResult()?.total_points }}</span>
+      </div>
+      @if (submitResult()?.percentage !== undefined) {
+      <p class="text-xl font-bold text-indigo-400">{{ submitResult()?.percentage }}%</p>
+      }
+    </div>
+
+    <!-- Feedback Form -->
+    <div class="p-8">
+      <label class="block text-sm font-bold text-gray-600 mb-2 uppercase tracking-widest">
+        Share your feedback (Optional)
+      </label>
+      <textarea
+        class="w-full px-4 py-3 border border-gray-200 rounded-2xl text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        rows="3" placeholder="How did you find this quiz?" [ngModel]="feedbackText()"
+        (ngModelChange)="feedbackText.set($event)">
+      </textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="p-6 bg-slate-50 flex gap-3 justify-end">
+      <button mat-stroked-button (click)="showResultPopup.set(false)">
+        View Answers
+      </button>
+      <button mat-flat-button color="primary" class="rounded-xl px-6 font-bold" (click)="showResultPopup.set(false)"
+        routerLink="/quiz">
+        Done
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Missed Questions Confirmation Popup -->
+@if (showMissedQuestionsPopup()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+  (click)="cancelSubmit()">
+  <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-slideUp"
+    (click)="$event.stopPropagation()">
+
+    <!-- Warning Header -->
+    <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white text-center">
+      <mat-icon class="text-white text-5xl mb-2" style="font-size:48px;width:48px;height:48px;">warning</mat-icon>
+      <h2 class="text-2xl font-black">Unanswered Questions</h2>
+      <p class="text-amber-100 opacity-90 text-sm mt-1">You have missed some questions</p>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6">
+      <p class="text-gray-600 mb-4">The following question(s) have not been answered:</p>
+      <div class="flex flex-wrap gap-2 mb-6 max-h-32 overflow-y-auto">
+        @for (num of missedQuestionNumbers(); track num) {
+        <button (click)="currentQuestionIndex.set(num - 1); cancelSubmit()"
+          class="w-10 h-10 rounded-xl bg-amber-50 border-2 border-amber-300 text-amber-700 text-sm font-bold hover:bg-amber-100 hover:border-amber-500 transition-all cursor-pointer flex items-center justify-center">
+          {{ num }}
+        </button>
+        }
+      </div>
+      <p class="text-gray-400 text-xs italic">Click any number above to jump to that question, or choose an action
+        below.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="p-4 bg-slate-50 flex gap-3 justify-end">
+      <button mat-stroked-button (click)="cancelSubmit()" class="rounded-xl font-bold">
+        Go Back
+      </button>
+      <button mat-flat-button color="warn" (click)="confirmSubmitAnyway()" class="rounded-xl font-bold px-6">
+        Submit Anyway
+      </button>
+    </div>
+
+  </div>
+</div>
+}
+
+<!-- Leave Confirmation Popup -->
+@if (showLeavePopup()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+  (click)="showLeavePopup.set(false)">
+  <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden animate-slideUp"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white text-center">
+      <mat-icon class="text-white mb-2" style="font-size:48px;width:48px;height:48px;">save</mat-icon>
+      <h2 class="text-xl font-black">Unsaved Changes</h2>
+      <p class="text-blue-100 opacity-90 text-sm mt-1">Your answers have not been saved yet</p>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 text-center">
+      <p class="text-gray-600">Would you like to save your progress before leaving?</p>
+      <p class="text-gray-400 text-xs mt-2 italic">If you leave without saving, your current answers will be lost.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="p-4 bg-slate-50 flex flex-col gap-3">
+      <button mat-flat-button color="primary" (click)="saveAndLeave()" class="w-full rounded-xl font-bold py-2">
+        <span class="flex items-center justify-center gap-2"><mat-icon>save</mat-icon> Save & Leave</span>
+      </button>
+      <button mat-stroked-button color="warn" (click)="leaveWithoutSaving()" class="w-full rounded-xl font-bold py-2">
+        Leave Without Saving
+      </button>
+      <button mat-stroked-button (click)="showLeavePopup.set(false)" class="w-full rounded-xl font-bold py-2">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
+}

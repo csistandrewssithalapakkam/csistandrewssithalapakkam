@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import "quill/dist/quill.snow.css";
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Material Dialog specific fixes */
+.cdk-global-scrollblock {
+  position: static !important;
+  width: 100% !important;
+  overflow-y: scroll !important;
+}
+
+/* Angular Material + Tailwind v4 Fixes */
+.mat-mdc-form-field {
+  display: block !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  background-color: white !important;
+}
+
+/* Ensure material icons are properly sized */
+.mat-icon {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fix for overlapping prefix icons in outline fields */
+.mat-mdc-form-field-type-mat-input .mat-mdc-form-field-flex {
+  align-items: center !important;
+}
+
+.mat-mdc-form-field-prefix {
+  display: flex !important;
+  align-items: center !important;
+  padding-right: 8px;
+}
+
+/* Fix for label positioning in outline fields */
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+.mat-mdc-form-field-label-wrapper {
+  top: -12px !important;
+}
+
+/* Ensure inputs take full height of the container */
+.mat-mdc-form-field-infix {
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Fix for SVG icons inside buttons and fields */
+.mat-mdc-button .mat-icon,
+.mat-mdc-form-field .mat-icon {
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Ensure the notched outline is visible */
+.mdc-notched-outline__leading,
+.mdc-notched-outline__notch,
+.mdc-notched-outline__trailing {
+  border-width: 1px !important;
+}
+
+/* Fix for Tailwind v4 reset affecting Material labels */
+.mat-mdc-form-field-label-wrapper {
+  overflow: visible !important;
+}
+
+.mdc-floating-label {
+  line-height: 1.15 !important;
+}
+
+/* Fix for input height and alignment */
+.mat-mdc-form-field-infix {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.mat-mdc-input-element {
+  margin-top: 0 !important;
+}

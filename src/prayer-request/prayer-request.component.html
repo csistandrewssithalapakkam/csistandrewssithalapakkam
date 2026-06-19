@@ -1,0 +1,157 @@
+<!-- Toast Notification -->
+@if (toastMessage(); as message) {
+  <div 
+    class="fixed bottom-10 left-1/2 -translate-x-1/2 text-white py-3 px-6 rounded-full shadow-lg animate-fade-in z-[101]"
+    [class.bg-green-600]="toastType() === 'success'"
+    [class.bg-red-600]="toastType() === 'error'"
+  >
+    <p>{{ message }}</p>
+  </div>
+}
+
+<!-- Prayer Request -->
+<section id="prayer" class="py-20 bg-gradient-to-br from-sky-50 to-gray-50">
+  <div class="container mx-auto px-6 max-w-4xl">
+    <div
+      class="rounded-xl shadow-2xl p-10 text-center relative transition-colors duration-300 border"
+      [class.bg-white]="!isDarkMode()"
+      [class.border-gray-200]="!isDarkMode()"
+      [class.bg-gray-800]="isDarkMode()"
+      [class.border-gray-700]="isDarkMode()"
+    >
+      <button
+        (click)="toggleTheme()"
+        class="absolute top-6 right-6 text-gray-500 hover:text-primary-blue transition-colors"
+        [class.text-gray-400]="isDarkMode()"
+        [class.hover:text-white]="isDarkMode()"
+        aria-label="Toggle dark mode"
+      >
+        @if(!isDarkMode()) {
+        <!-- Moon Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+          />
+        </svg>
+        } @else {
+        <!-- Sun Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+          />
+        </svg>
+        }
+      </button>
+
+      <h2
+        class="text-4xl font-bold font-serif transition-colors duration-300"
+        [class.text-black]="!isDarkMode()"
+        [class.text-white]="isDarkMode()"
+      >
+        Prayer Request
+      </h2>
+      <p
+        class="mt-2 transition-colors duration-300"
+        [class.text-black]="!isDarkMode()"
+        [class.text-gray-300]="isDarkMode()"
+      >
+        We would be honored to pray for you. How can we help?
+      </p>
+      <div class="mt-8">
+        <textarea
+          [value]="prayerRequest()"
+          (input)="onPrayerRequestInput($any($event.target).value)"
+          (focus)="onPrayerRequestFocus()"
+          rows="6"
+          placeholder="Share your prayer request here..."
+          class="w-full p-4 border rounded-lg focus:ring-2 transition-all duration-300"
+          [class.bg-gray-50]="!isDarkMode()"
+          [class.text-black]="!isDarkMode()"
+          [class.bg-gray-900]="isDarkMode()"
+          [class.text-gray-200]="isDarkMode()"
+          [class.placeholder-gray-500]="isDarkMode()"
+          [class.border-gray-300]="!isDarkMode() && !hasValidationError()"
+          [class.border-gray-600]="isDarkMode() && !hasValidationError()"
+          [class.border-red-500]="hasValidationError()"
+          [class.focus:border-accent-blue]="!hasValidationError()"
+          [class.focus:ring-accent-blue]="!hasValidationError()"
+          [class.focus:border-red-500]="hasValidationError()"
+          [class.focus:ring-red-500]="hasValidationError()"
+        ></textarea>
+        @if(hasValidationError()) {
+          <p class="text-red-600 text-sm mt-2 text-left animate-fade-in">Please enter a prayer request.</p>
+        }
+        <div 
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          [class.mt-4]="!hasValidationError()"
+          [class.mt-2]="hasValidationError()"
+        >
+          <input
+            type="email"
+            [value]="email()"
+            (input)="email.set($any($event.target).value)"
+            placeholder="Email (Optional)"
+            class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-accent-blue transition-all duration-300"
+            [class.bg-gray-50]="!isDarkMode()"
+            [class.border-gray-300]="!isDarkMode()"
+            [class.text-black]="!isDarkMode()"
+            [class.bg-gray-900]="isDarkMode()"
+            [class.border-gray-600]="isDarkMode()"
+            [class.text-gray-200]="isDarkMode()"
+            [class.placeholder-gray-500]="isDarkMode()"
+          />
+          <input
+            type="tel"
+            [value]="mobile()"
+            (input)="mobile.set($any($event.target).value)"
+            placeholder="Mobile Number (Optional)"
+            class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-accent-blue transition-all duration-300"
+            [class.bg-gray-50]="!isDarkMode()"
+            [class.border-gray-300]="!isDarkMode()"
+            [class.text-black]="!isDarkMode()"
+            [class.bg-gray-900]="isDarkMode()"
+            [class.border-gray-600]="isDarkMode()"
+            [class.text-gray-200]="isDarkMode()"
+            [class.placeholder-gray-500]="isDarkMode()"
+          />
+        </div>
+        <button
+          (click)="submitPrayerRequest()"
+          [disabled]="isSubmitting()"
+          class="mt-6 w-full font-bold py-4 px-8 rounded-full shadow-lg text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+          [class.bg-primary-blue]="!isDarkMode()"
+          [class.text-white]="!isDarkMode()"
+          [class.hover:bg-accent-blue]="!isDarkMode() && !isSubmitting()"
+          [class.text-gray-200]="isDarkMode()"
+          [class.bg-accent-blue]="isDarkMode()"
+          [class.hover:bg-sky-300]="isDarkMode() && !isSubmitting()"
+          [class.hover:text-white]="isDarkMode()"
+        >
+          @if(isSubmitting()) {
+            <span>Submitting...</span>
+          } @else {
+            <span>Submit Prayer Request</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,70 @@
+<!-- Life Milestones Section -->
+<section class="py-20 bg-light-blue-bg">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold font-serif text-black">
+      Celebrating Life's Milestones
+    </h2>
+    <p class="mt-2 text-black">
+      Join us in celebrating the special moments within our church family.
+    </p>
+
+    <div class="mt-12">
+      <!-- Combined Birthdays & Anniversaries Card -->
+      <div
+        class="bg-white rounded-xl shadow-lg p-8 text-center relative overflow-hidden border-t-8 border-warm-gold max-w-4xl mx-auto"
+      >
+        <h3 class="text-3xl font-bold text-black font-serif">
+          Birthday & Wedding Anniversary
+        </h3>
+        
+        @if (birthdays().length > 0 || anniversaries().length > 0) {
+          <div class="mt-8 text-center px-4 py-6">
+            <p class="text-xl text-gray-800 leading-relaxed font-serif">
+              CSI St. Andrew's Church joyfully extends its warmest wishes to all members celebrating their Birthdays and Wedding Anniversaries this week.
+            </p>
+            <p class="mt-4 text-lg text-gray-700 leading-relaxed italic">
+              "May the Lord bless you and keep you; may His face shine upon you and be gracious to you. We pray for a year ahead filled with abundant joy, profound peace, and countless blessings."
+            </p>
+          </div>
+        } @else {
+          <p class="mt-6 text-lg text-gray-600 py-8">
+            No birthdays or anniversaries to celebrate this week. We pray for God's blessings on our entire church family.
+          </p>
+        }
+      </div>
+    </div>
+
+    <div class="mt-16 max-w-3xl mx-auto bg-white/50 p-6 rounded-lg shadow-inner border-t-2 border-warm-gold min-h-[220px] flex flex-col justify-center">
+        <h3 class="text-xl font-bold text-black mb-4 font-serif">A Blessing For You</h3>
+        
+        @if (milestoneVerseService.loading()) {
+            <p class="text-gray-500">Loading blessing...</p>
+        } @else if (milestoneVerseService.error()) {
+            <p class="text-gray-500">No blessing available at the moment.</p>
+        } @else if (milestoneVerseService.verse(); as verse) {
+            @if(verse.quote || verse.quoteTamil) {
+                <div class="animate-fade-in">
+                    @if(verse.quote) {
+                        <blockquote class="text-black italic font-serif text-lg">
+                        "{{ verse.quote }}"
+                        </blockquote>
+                        <p class="mt-2 text-warm-gold font-semibold">{{ verse.reference }}</p>
+                    }
+                    @if(verse.quote && verse.quoteTamil) {
+                        <hr class="my-4 border-gray-300" />
+                    }
+                    @if(verse.quoteTamil) {
+                        <blockquote class="text-black italic font-serif text-lg">
+                        "{{ verse.quoteTamil }}"
+                        </blockquote>
+                        <p class="mt-2 text-warm-gold font-semibold">{{ verse.referenceTamil }}</p>
+                    }
+                </div>
+            } @else {
+                 <p class="text-gray-500">No blessing available at the moment.</p>
+            }
+        }
+    </div>
+
+  </div>
+</section>

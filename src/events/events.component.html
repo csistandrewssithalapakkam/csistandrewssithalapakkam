@@ -1,0 +1,73 @@
+<!-- Upcoming Events Section -->
+<section id="events" class="py-20 bg-white">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold font-serif text-black">
+      Events at St. Andrew's
+    </h2>
+    <p class="mt-2 text-black">
+      Stay connected with our church family through worship services, fellowship gatherings, and special events.
+    </p>
+
+    <!-- Upcoming Events -->
+    @if (upcomingEvents().length > 0) {
+      <div class="mt-12 text-left">
+        <h3 class="text-3xl font-bold font-serif text-black mb-6">Upcoming Events</h3>
+        <div class="grid md:grid-cols-3 gap-8">
+          @for (event of upcomingEvents(); track event.id) {
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden text-left group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col">
+            @if(event.image) {
+            <div class="overflow-hidden cursor-pointer" (click)="openImagePreview(event, upcomingEvents())">
+              <img
+                [src]="event.image"
+                alt="{{ event.title }}"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            }
+            <div class="p-6 flex-grow flex flex-col">
+              <h3 class="text-xl font-bold text-black">{{ event.title }}</h3>
+              <p class="mt-1 font-semibold text-warm-gold">{{ event.date | date:'fullDate' }}</p>
+              <p class="mt-3 text-black flex-grow">{{ event.description }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Recent Events -->
+     <div class="mt-20 text-left">
+        <h3 class="text-3xl font-bold font-serif text-black mb-6">Recent Events</h3>
+         @if(recentEvents().length > 0) {
+            <div class="grid md:grid-cols-3 gap-8">
+            @for (event of recentEvents(); track event.id) {
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden text-left group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col">
+                 @if(event.image) {
+                    <div class="overflow-hidden cursor-pointer" (click)="openImagePreview(event, recentEvents())">
+                    <img
+                        [src]="event.image"
+                        alt="{{ event.title }}"
+                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    </div>
+                }
+                <div class="p-6 flex-grow flex flex-col">
+                    <h3 class="text-xl font-bold text-black">{{ event.title }}</h3>
+                    <p class="mt-1 font-semibold text-gray-600">{{ event.date | date:'fullDate' }}</p>
+                    <p class="mt-3 text-black flex-grow">{{ event.description }}</p>
+                </div>
+            </div>
+            }
+            </div>
+        } @else {
+            <p class="text-center text-gray-500 py-8">No recent events to show.</p>
+        }
+    </div>
+
+  </div>
+</section>
+
+<!-- Full Screen Image Preview -->
+@if (selectedImageForPreview(); as preview) {
+  <app-image-preview [images]="preview.images" [startIndex]="preview.index" (close)="closeImagePreview()" />
+}

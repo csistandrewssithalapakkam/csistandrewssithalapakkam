@@ -1,0 +1,79 @@
+<!-- Header -->
+<header class="fixed top-0 w-full z-50 transition-all duration-300" [class.bg-white/80]="isScrolled() || isSubPage()"
+  [class.backdrop-blur-md]="isScrolled() || isSubPage()" [class.shadow-sm]="isScrolled() || isSubPage()">
+  <nav class="container mx-auto flex justify-between items-center transition-colors duration-300"
+    [class.text-black]="isScrolled() || isSubPage()" [class.text-white]="!isScrolled() && !isSubPage()"
+    [class.drop-shadow-md]="!isScrolled() && !isSubPage()">
+    <a href="#home" (click)="scrollTo('home', $event)" class="flex items-center">
+      <img [src]="logo" alt="St. Andrew's Church Logo" class="h-24 w-auto" />
+      <span class="text-xl font-bold font-serif hidden md:block ml-3">CSI St. Andrew’s Chruch</span>
+    </a>
+    <div class="hidden md:flex space-x-8 items-center font-medium">
+      <a href="#home" (click)="scrollTo('home', $event)" class="hover:text-accent-blue transition-colors">Home</a>
+      <a href="#services" (click)="scrollTo('services', $event)" class="hover:text-accent-blue transition-colors">Our
+        Services</a>
+      <a routerLink="/forms" class="hover:text-accent-blue transition-colors">Applications</a>
+      <div class="relative group">
+        <a class="hover:text-accent-blue transition-colors flex items-center cursor-pointer py-6">
+          Bible Study
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </a>
+        <div
+          class="absolute top-full left-1/2 -translate-x-1/2 w-48 bg-gray-800/80 backdrop-blur-sm rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto pt-4">
+          <a href="#daily-verse" (click)="scrollTo('daily-verse', $event)"
+            class="block px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors">Daily Devotion</a>
+          <a href="#fellowship" (click)="scrollTo('fellowship', $event)"
+            class="block px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors">Fellowship</a>
+          <a href="#missions" (click)="scrollTo('missions', $event)"
+            class="block px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors">Missionary Missions</a>
+        </div>
+      </div>
+      <a href="#events" (click)="scrollTo('events', $event)" class="hover:text-accent-blue transition-colors">Events</a>
+      <a href="#gallery" (click)="scrollTo('gallery', $event)"
+        class="hover:text-accent-blue transition-colors">Gallery</a>
+      <a href="#social-services" (click)="scrollTo('social-services', $event)"
+        class="hover:text-accent-blue transition-colors">Social Services</a>
+      <a href="#prayer" (click)="scrollTo('prayer', $event)" class="hover:text-accent-blue transition-colors">Prayer</a>
+      <a href="#visit" (click)="scrollTo('visit', $event)" class="hover:text-accent-blue transition-colors">Visit Us</a>
+    </div>
+    <button (click)="toggleMobileMenu()" class="md:hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        @if (!isMobileMenuOpen()) {
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        } @else {
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        }
+      </svg>
+    </button>
+  </nav>
+  <!-- Mobile Menu -->
+  @if (isMobileMenuOpen()) {
+  <div class="md:hidden bg-gray-800/95 backdrop-blur-md shadow-lg absolute w-full left-0">
+    <a href="#home" (click)="scrollTo('home', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Home</a>
+    <a href="#services" (click)="scrollTo('services', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Our Services</a>
+    <a routerLink="/forms" class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Applications</a>
+    <a class="block py-3 px-6 text-white cursor-default">Bible Study</a>
+    <a href="#daily-verse" (click)="scrollTo('daily-verse', $event)"
+      class="block py-3 px-10 text-gray-300 hover:bg-gray-700 transition-colors text-sm">- Daily Devotion</a>
+    <a href="#fellowship" (click)="scrollTo('fellowship', $event)"
+      class="block py-3 px-10 text-gray-300 hover:bg-gray-700 transition-colors text-sm">- Fellowship</a>
+    <a href="#missions" (click)="scrollTo('missions', $event)"
+      class="block py-3 px-10 text-gray-300 hover:bg-gray-700 transition-colors text-sm">- Missionary Missions</a>
+    <a href="#events" (click)="scrollTo('events', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Events</a>
+    <a href="#gallery" (click)="scrollTo('gallery', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Gallery</a>
+    <a href="#social-services" (click)="scrollTo('social-services', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Social Services</a>
+    <a href="#prayer" (click)="scrollTo('prayer', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Prayer</a>
+    <a href="#visit" (click)="scrollTo('visit', $event)"
+      class="block py-3 px-6 text-white hover:bg-gray-700 transition-colors">Visit Us</a>
+  </div>
+  }
+</header>

@@ -1,0 +1,66 @@
+<section id="daily-verse" class="py-16 bg-white">
+  <div class="container mx-auto px-6 text-center">
+    <div class="max-w-3xl mx-auto min-h-[250px] flex flex-col justify-center">
+        <h2 class="text-3xl font-bold font-serif text-black mb-4">Verse of the Day</h2>
+        
+        @if (verseService.loading()) {
+            <p class="text-gray-500">Loading today's verse...</p>
+        } @else if (verseService.error(); as error) {
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Error: </strong>
+                <span class="block sm:inline">{{ error }}</span>
+            </div>
+        } @else if (verseService.verse(); as verse) {
+            @if (verse.quote || verse.quoteTamil) {
+                <!-- Language Toggle -->
+                @if (showLanguageToggle()) {
+                    <div class="flex justify-center mb-6">
+                        <div class="relative flex w-48 p-1 bg-gray-200 rounded-full">
+                            <div
+                            class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"
+                            [class.translate-x-full]="currentLanguage() === 'tamil'"
+                            ></div>
+                            <button
+                            type="button"
+                            (click)="setLanguage('english')"
+                            class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+                            [class.text-primary-blue]="currentLanguage() === 'english'"
+                            [class.text-gray-500]="currentLanguage() !== 'english'"
+                            >
+                            English
+                            </button>
+                            <button
+                            type="button"
+                            (click)="setLanguage('tamil')"
+                            class="relative z-10 flex-1 py-1.5 text-sm font-medium transition-colors duration-300 rounded-full"
+                            [class.text-primary-blue]="currentLanguage() === 'tamil'"
+                            [class.text-gray-500]="currentLanguage() !== 'tamil'"
+                            >
+                            தமிழ்
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                @if(currentLanguage() === 'english' && verse.quote) {
+                    <div class="animate-fade-in">
+                        <blockquote class="text-2xl italic font-serif text-black">
+                           "{{ verse.quote }}"
+                        </blockquote>
+                        <p class="mt-4 text-lg font-semibold text-warm-gold">{{ verse.reference }}</p>
+                    </div>
+                } @else if (currentLanguage() === 'tamil' && verse.quoteTamil) {
+                    <div class="animate-fade-in">
+                        <blockquote class="text-2xl italic font-serif text-black">
+                           "{{ verse.quoteTamil }}"
+                        </blockquote>
+                        <p class="mt-4 text-lg font-semibold text-warm-gold">{{ verse.referenceTamil }}</p>
+                    </div>
+                }
+            } @else {
+                 <p class="text-gray-500">Verse for today is not available.</p>
+            }
+        }
+    </div>
+  </div>
+</section>

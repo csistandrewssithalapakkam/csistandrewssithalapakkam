@@ -1,0 +1,101 @@
+<!-- Toast Notification -->
+@if (toastMessage(); as message) {
+  <div 
+    class="fixed top-24 right-6 z-[101] text-white py-3 px-6 rounded-lg shadow-lg animate-fade-in"
+    [class.bg-green-600]="toastType() === 'success'"
+    [class.bg-red-600]="toastType() === 'error'"
+  >
+    <p>{{ message }}</p>
+  </div>
+}
+
+<section class="bg-white p-8 rounded-lg shadow">
+  <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+    <h2 class="text-2xl font-bold text-gray-800">Manage Blessing Verses</h2>
+    @if(permissionService.canCreate('blessing-verses')) {
+      <button (click)="openAddVerseModal()" class="px-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition-colors flex items-center gap-2 self-start sm:self-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        Add Verse
+      </button>
+    }
+  </div>
+
+  <!-- Recent Verses List -->
+  <div>
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">Last 10 Verses Added</h3>
+    @if(blessingVerseService.loading()) {
+      <p class="text-gray-500">Loading verses...</p>
+    } @else if (blessingVerseService.verses().length > 0) {
+      <div class="space-y-4">
+        @for(verse of blessingVerseService.verses(); track verse.id) {
+          <div class="bg-gray-50 border rounded-lg p-4">
+            <div class="mb-2">
+              <blockquote class="text-gray-800 italic">"{{ verse.verseEnglish }}"</blockquote>
+              <p class="text-right text-sm font-semibold text-warm-gold mt-1">{{ verse.locationEnglish }}</p>
+            </div>
+            <hr class="my-2 border-gray-200">
+            <div class="mb-2">
+              <blockquote class="text-gray-800 italic">"{{ verse.verseTamil }}"</blockquote>
+              <p class="text-right text-sm font-semibold text-warm-gold mt-1">{{ verse.locationTamil }}</p>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Added: {{ verse.createdDate | date:'medium' }}</p>
+          </div>
+        }
+      </div>
+    } @else {
+       <div class="text-center py-8 px-4 border-2 border-dashed rounded-lg">
+        <p class="text-gray-500">No blessing verses found.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Add Verse Modal -->
+@if (isAddVerseModalVisible()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" (click)="closeAddVerseModal()">
+  <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl m-4" (click)="$event.stopPropagation()">
+    <form [formGroup]="addVerseForm" (ngSubmit)="saveVerse()">
+      <div class="p-6 border-b">
+        <h3 class="text-xl font-bold font-serif text-gray-800">Add New Blessing Verse</h3>
+      </div>
+      <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div>
+          <label for="Verses_english" class="block text-sm font-medium text-gray-700">Verse (English)</label>
+          <textarea id="Verses_english" formControlName="Verses_english" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue" required></textarea>
+        </div>
+        <div>
+          <label for="Loc_english" class="block text-sm font-medium text-gray-700">Location (English)</label>
+          <input id="Loc_english" type="text" formControlName="Loc_english" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue" required>
+        </div>
+         <hr>
+        <div>
+          <label for="Verses_tamil" class="block text-sm font-medium text-gray-700">Verse (Tamil)</label>
+          <textarea id="Verses_tamil" formControlName="Verses_tamil" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue" required></textarea>
+        </div>
+        <div>
+          <label for="Loc_tamil" class="block text-sm font-medium text-gray-700">Location (Tamil)</label>
+          <input id="Loc_tamil" type="text" formControlName="Loc_tamil" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue" required>
+        </div>
+      </div>
+      <div class="p-6 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button type="button" (click)="closeAddVerseModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          [disabled]="addVerseForm.invalid || isSubmitting()"
+          class="px-4 py-2 bg-primary-blue text-white rounded-md hover:bg-accent-blue transition-colors disabled:bg-gray-400 disabled:cursor-wait"
+        >
+          @if(isSubmitting()) {
+            <span>Saving...</span>
+          } @else {
+            <span>Save Verse</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}

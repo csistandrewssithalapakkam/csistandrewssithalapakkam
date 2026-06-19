@@ -1,0 +1,103 @@
+<!-- Photo Gallery Section -->
+<section id="gallery" class="py-20 bg-white">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold font-serif text-black">Photo Gallery</h2>
+    <p class="mt-2 text-black">Moments from our church life and community.</p>
+
+    <div class="mt-12 space-y-16">
+      @for (category of visibleCategories(); track category.name) {
+      <div class="text-left">
+        <h3 class="text-2xl font-bold font-serif text-black mb-6">{{ category.name }}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          @for (image of category.images; track image; let i = $index) {
+            @if (i < 3) {
+              @if (isGoogleVideo(image)) {
+                <div class="overflow-hidden rounded-lg shadow-md aspect-w-1 aspect-h-1 cursor-pointer" (click)="openVideoPreview(image)">
+                  <div class="w-full h-full bg-black flex items-center justify-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white/80 group-hover:text-white transition-colors" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              } @else {
+                <div class="overflow-hidden rounded-lg shadow-md aspect-w-1 aspect-h-1 cursor-pointer" (click)="openImagePreview(category.images, i)">
+                  <img
+                    class="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-110"
+                    [src]="image"
+                    alt="Image from {{ category.name }} gallery"
+                  />
+                </div>
+              }
+            }
+          }
+          @if (category.images.length > 3) {
+            <button (click)="openCategoryModal(category)" class="flex items-center justify-center bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition-colors">
+              <div class="text-center">
+                <p class="text-lg font-semibold text-black">View More</p>
+                <p class="text-sm text-gray-600">{{ category.images.length - 3 }} more photos</p>
+              </div>
+            </button>
+          }
+        </div>
+      </div>
+      }
+
+      @if (galleryCategories().length > 3) {
+        <div class="text-center mt-12">
+            <a routerLink="/gallery" class="bg-primary-blue text-white font-bold py-3 px-8 rounded-full hover:bg-accent-blue transition-colors duration-300 shadow-lg inline-block">
+                View All Categories
+            </a>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Category Lightbox Modal -->
+@if (selectedCategoryForModal(); as category) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" (click)="closeCategoryModal()">
+    <div class="bg-white rounded-lg shadow-2xl max-w-6xl w-full m-4 relative h-[90vh]" (click)="$event.stopPropagation()">
+      <div class="p-6 border-b flex justify-between items-center">
+        <h3 class="text-2xl font-bold font-serif text-black">{{ category.name }}</h3>
+        <button (click)="closeCategoryModal()" class="text-gray-400 hover:text-gray-800 transition-colors" aria-label="Close gallery view">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-6 h-[calc(90vh-85px)] overflow-y-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          @for (image of category.images; track image; let i = $index) {
+            @if (isGoogleVideo(image)) {
+              <div class="overflow-hidden rounded-lg shadow-md aspect-square cursor-pointer" (click)="openVideoPreview(image)">
+                <div class="w-full h-full bg-black flex items-center justify-center group">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white/80 group-hover:text-white transition-colors" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+            } @else {
+              <div class="overflow-hidden rounded-lg shadow-md aspect-square cursor-pointer" (click)="openImagePreview(category.images, i)">
+                <img
+                  class="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-110"
+                  [src]="image"
+                  alt="Full size image from {{ category.name }} gallery"
+                />
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Full Screen Image Preview -->
+@if (selectedImageForPreview(); as preview) {
+  <app-image-preview [images]="preview.images" [startIndex]="preview.index" (close)="closeImagePreview()" />
+}
+
+<!-- Full Screen Video Preview -->
+@if (selectedVideoForPreview(); as videoUrl) {
+  <app-video-preview [videoUrl]="videoUrl" (close)="closeVideoPreview()" />
+}

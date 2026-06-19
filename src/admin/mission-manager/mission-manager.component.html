@@ -1,0 +1,184 @@
+<!-- Toast Notification -->
+@if (toastMessage(); as message) {
+  <div 
+    class="fixed top-24 right-6 z-[101] text-white py-3 px-6 rounded-lg shadow-lg animate-fade-in"
+    [class.bg-green-600]="toastType() === 'success'"
+    [class.bg-red-600]="toastType() === 'error'"
+  >
+    <p>{{ message }}</p>
+  </div>
+}
+
+<section class="bg-white p-8 rounded-lg shadow">
+  <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+    <h2 class="text-2xl font-bold text-gray-800">Manage Missionary Spotlight</h2>
+    @if(permissionService.canCreate('missions')) {
+      <button (click)="openModal()" class="px-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition-colors flex items-center gap-2 self-start sm:self-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        Add Story
+      </button>
+    }
+  </div>
+
+  <!-- Stories List -->
+  <div class="space-y-4">
+    @if(missionaryService.adminLoading()) {
+      <div class="text-center py-8"><p class="text-gray-500">Loading stories...</p></div>
+    } @else if (missionaryService.adminError(); as error) {
+      <div class="text-center py-8 text-red-600">{{ error }}</div>
+    } @else {
+      @for(story of missionaryService.stories(); track story.id) {
+        <div class="bg-gray-50 border rounded-lg p-4 flex flex-col md:flex-row gap-4" [class.border-green-400]="story.isActive">
+          <img [src]="story.imageUrl || 'https://picsum.photos/186/250?grayscale'" [alt]="story.titleEnglish || story.titleTamil" class="w-full md:w-[150px] h-[200px] object-cover rounded-md flex-shrink-0 bg-gray-200">
+          <div class="flex-grow">
+            @if(story.isActive) {
+              <span class="inline-block bg-green-200 text-green-800 text-xs font-semibold mb-2 px-2.5 py-0.5 rounded-full">Active</span>
+            }
+            <h3 class="text-lg font-bold text-gray-800">{{ story.titleEnglish || story.titleTamil }}</h3>
+            <p class="text-sm text-gray-600 mt-2 line-clamp-4">{{ story.shortStoryEnglish || story.shortStoryTamil }}</p>
+          </div>
+          <div class="flex-shrink-0 flex flex-row md:flex-col gap-2 justify-end pt-2 self-start">
+              @if(permissionService.canEdit('missions')) {
+                <button (click)="openModal(story)" class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm">
+                  Edit
+                </button>
+                <button (click)="activateStory(story.id)" [disabled]="story.isActive" class="px-3 py-1 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors text-sm disabled:bg-gray-400 disabled:cursor-not-allowed">
+                  Activate
+                </button>
+              }
+          </div>
+        </div>
+      } @empty {
+        <div class="text-center py-8 px-4 border-2 border-dashed rounded-lg">
+          <p class="text-gray-500">No missionary stories found. Add one to get started!</p>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<!-- Add/Edit Story Modal -->
+@if (isModalVisible()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" (click)="closeModal()">
+  <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl m-4" (click)="$event.stopPropagation()">
+    <form [formGroup]="storyForm" (ngSubmit)="saveStory()" novalidate>
+      <div class="p-6 border-b">
+        <h3 class="text-xl font-bold font-serif text-gray-800">{{ editingStory() ? 'Edit Missionary Story' : 'Add New Missionary Story' }}</h3>
+      </div>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto">
+        <!-- Left Column for Image -->
+        <div class="md:col-span-1">
+          <label for="imageFile" class="block text-sm font-medium text-gray-700 mb-1">Missionary Image</label>
+          <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div class="space-y-1 text-center">
+              @if(imagePreview()) {
+                <img [src]="imagePreview()" alt="Missionary preview" class="mx-auto h-48 w-auto object-cover rounded-md">
+              } @else {
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              }
+              <div class="flex text-sm text-gray-600 justify-center">
+                <label for="imageFile" class="relative cursor-pointer bg-white rounded-md font-medium text-primary-blue hover:text-accent-blue focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-accent-blue">
+                  <span>{{ editingStory() ? 'Change image' : 'Upload a file' }}</span>
+                  <input id="imageFile" name="imageFile" type="file" class="sr-only" (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/webp">
+                </label>
+              </div>
+              <p class="text-xs text-gray-500">Recommended size: 186x250</p>
+            </div>
+          </div>
+           @if (storyForm.get('imageFile')?.hasError('required') && storyForm.get('imageFile')?.touched) {
+            <p class="text-sm text-red-500 mt-1">An image is required for a new story.</p>
+          }
+        </div>
+
+        <!-- Right Column for Content -->
+        <div class="md:col-span-2">
+          <!-- Language Tabs -->
+          <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+              <button type="button" (click)="currentLanguageTab.set('english')"
+                class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm"
+                [class.border-primary-blue]="currentLanguageTab() === 'english'" [class.text-primary-blue]="currentLanguageTab() === 'english'"
+                [class.border-transparent]="currentLanguageTab() !== 'english'" [class.text-gray-500]="currentLanguageTab() !== 'english'">
+                English
+              </button>
+              <button type="button" (click)="currentLanguageTab.set('tamil')"
+                class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm"
+                [class.border-primary-blue]="currentLanguageTab() === 'tamil'" [class.text-primary-blue]="currentLanguageTab() === 'tamil'"
+                [class.border-transparent]="currentLanguageTab() !== 'tamil'" [class.text-gray-500]="currentLanguageTab() !== 'tamil'">
+                தமிழ்
+              </button>
+            </nav>
+          </div>
+          
+           @if (storyForm.hasError('atLeastOneTitleRequired') && storyForm.touched) {
+            <p class="text-sm text-red-500 mt-2 bg-red-50 p-2 rounded-md">At least one language (English or Tamil) must be provided with a title.</p>
+          }
+
+          <!-- Content Fields -->
+          <div class="mt-4 space-y-4">
+            @if(currentLanguageTab() === 'english') {
+              <div class="animate-fade-in">
+                <div>
+                  <label for="titleEnglish" class="block text-sm font-medium text-gray-700">Name / Title (English)</label>
+                  <input id="titleEnglish" type="text" formControlName="titleEnglish" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+                </div>
+                <div>
+                  <label for="shortStoryEnglish" class="block text-sm font-medium text-gray-700">Short Story (English)</label>
+                  <textarea id="shortStoryEnglish" formControlName="shortStoryEnglish" rows="5" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue"></textarea>
+                  @if(storyForm.get('shortStoryEnglish')?.hasError('required')) { <p class="text-sm text-red-500 mt-1">Short story is required if Title is provided.</p> }
+                </div>
+                <div>
+                  <label for="detailedStoryEnglish" class="block text-sm font-medium text-gray-700">Detailed Story (English, Optional)</label>
+                  <textarea id="detailedStoryEnglish" formControlName="detailedStoryEnglish" rows="8" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue"></textarea>
+                </div>
+              </div>
+            } @else {
+              <div class="animate-fade-in">
+                <div>
+                  <label for="titleTamil" class="block text-sm font-medium text-gray-700">பெயர் / தலைப்பு (தமிழ்)</label>
+                  <input id="titleTamil" type="text" formControlName="titleTamil" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue">
+                </div>
+                <div>
+                  <label for="shortStoryTamil" class="block text-sm font-medium text-gray-700">குறுகிய கதை (தமிழ்)</label>
+                  <textarea id="shortStoryTamil" formControlName="shortStoryTamil" rows="5" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue"></textarea>
+                   @if(storyForm.get('shortStoryTamil')?.hasError('required')) { <p class="text-sm text-red-500 mt-1">தலைப்பு வழங்கப்பட்டால் குறுகிய கதை தேவை.</p> }
+                </div>
+                <div>
+                  <label for="detailedStoryTamil" class="block text-sm font-medium text-gray-700">விரிவான கதை (தமிழ், விருப்பத்தேர்வு)</label>
+                  <textarea id="detailedStoryTamil" formControlName="detailedStoryTamil" rows="8" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-accent-blue focus:border-accent-blue"></textarea>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="p-6 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
+          Cancel
+        </button>
+        <button type="submit" [disabled]="storyForm.invalid || isSubmitting()" class="px-4 py-2 bg-primary-blue text-white rounded-md hover:bg-accent-blue transition-colors disabled:bg-gray-400 disabled:cursor-wait">
+          @if(isSubmitting()) {
+            <span>Saving...</span>
+          } @else {
+            <span>{{ editingStory() ? 'Update Story' : 'Add Story' }}</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}
+
+<!-- Confirmation Modal -->
+@if (isConfirmModalVisible()) {
+  <app-confirmation-modal
+    title="Confirm Activation"
+    message="Are you sure you want to set this story as the active one? This will deactivate any other active story."
+    (confirmAction)="handleConfirmAction()"
+    (closeModal)="closeConfirmModal()"
+  ></app-confirmation-modal>
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>CSI St. Andrew's Church, Sithalapakkam | Chennai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Welcome to CSI St. Andrew's Church in Sithalapakkam, Chennai. A vibrant CSI church serving communities near Medavakkam, Tambaram, Sholinganallur, and surrounding areas like Kovilanchery, Mambakkam, Ponmar, Perumbakkam, and Vengaivasal. Join us for worship, prayer, and fellowship. Find service times, events, and connect with our welcoming family." />
+  <meta name="keywords"
+    content="St Andrew's Church, St Andrew's Church Chennai, CSI Church Chennai, CSI Church Sithalapakkam, Church in Sithalapakkam, Church near Medavakkam, Church near Tambaram, Church near Sholinganallur, Kovilanchery, Mambakkam, Ponmar, Madurapakkam, Pallikaranai, Veerabadran Nagar, Perumbakkam, Vengadamangalam, Kandigai, Semancheri, Navalur, Karapakkam, Vengaivasal, Valluvar nagar, Thiruvanchery, Selaiyur, Sembakkam, Palaniappa Nagar, TNHB Sithalapakkam, Christian church, Sunday service, prayer, fellowship" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-21D02Q4E3B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-21D02Q4E3B');
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#0ea5e9', /* sky-500 */
+            'accent-blue': '#38bdf8', /* sky-400 */
+            'light-blue-bg': '#f0f9ff', /* sky-50 */
+            'dark-blue-bg': '#0c4a6e', /* sky-900 */
+            'warm-gold': '#B48A5E',
+          },
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'serif': ['Lora', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    /* Custom styles for animations */
+    @keyframes zoom-out {
+      from {
+        transform: scale(1.1);
+      }
+
+      to {
+        transform: scale(1);
+      }
+    }
+
+    .animate-zoom-out {
+      animation: zoom-out 8s linear forwards;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+
+    /* Custom prose styles for fellowship posts */
+    .prose h2 {
+      font-size: 1.875rem;
+      /* text-3xl */
+      line-height: 2.25rem;
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      margin-top: 1.5em;
+      margin-bottom: 0.75em;
+    }
+
+    .prose h3 {
+      font-size: 1.5rem;
+      /* text-2xl */
+      line-height: 2rem;
+      font-family: 'Lora', serif;
+      font-weight: 600;
+      margin-top: 1.25em;
+      margin-bottom: 0.5em;
+    }
+
+    .prose p:not(:first-child) {
+      text-indent: 1.5em;
+    }
+
+    .prose p {
+      margin-top: 1.25em;
+      margin-bottom: 1.25em;
+      line-height: 1.75;
+    }
+
+    .prose ul,
+    .prose ol {
+      margin-top: 1.25em;
+      margin-bottom: 1.25em;
+      padding-left: 1.75em;
+    }
+
+    .prose ul {
+      list-style-type: disc;
+    }
+
+    .prose ol {
+      list-style-type: decimal;
+    }
+
+    .prose li {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .prose mark {
+      background-color: #fef08a;
+      /* yellow-200 */
+      padding: 0.1em 0.3em;
+      border-radius: 0.25rem;
+    }
+
+    .prose strong {
+      font-weight: 700;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lora:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://unpkg.com/@angular/material/prebuilt-themes/indigo-pink.css" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.3.10?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.3.10?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.3.10?external=rxjs",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.3.10?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^20.3.10/http?external=rxjs",
+    "@angular/router": "https://next.esm.sh/@angular/router@^20.3.10?external=rxjs",
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.10?external=rxjs",
+    "@angular/common/": "https://esm.sh/@angular/common@^21.1.5/",
+    "rxjs/": "https://esm.sh/rxjs@^7.8.2/"
+  }
+}
+</script>
+</head>
+
+<body class="bg-light-blue-bg font-sans text-black">
+  <app-root></app-root>
+</body>
+
+</html>
