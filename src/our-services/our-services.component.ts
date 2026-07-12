@@ -17,6 +17,7 @@ export class OurServicesComponent {
       category: 'Sunday Morning Services',
       items: [
         { name: 'All Sundays', time: '8:30 a.m.' },
+        { name: '1st Sunday (Holy Communion)', time: '8:30 a.m.' },
         { name: '4th Sunday (Holy Communion)', time: '9:00 a.m.' },
       ],
     },
@@ -35,22 +36,25 @@ export class OurServicesComponent {
   rightCardServices: ServiceTime[] = [
     {
       category: 'Sunday Evening Service',
-      items: [{ name: '1st Sunday (Holy Communion)', time: '6:30 p.m.' }],
+      items: [{ name: '1st Sunday', time: '6:30 p.m.' }],
     },
     {
       category: 'Monthly Prayers',
-      items: [{ name: 'Night prayer', time: '1st Friday - 10:00 p.m.' }],
+      items: [
+        { name: 'Night prayer', time: '1st Friday - 10:00 p.m.' },
+        { name: 'Fasting Prayer', time: '4th Saturday - 10:00 a.m.' },
+      ],
     },
     {
       category: 'Other Gatherings',
       items: [
-        { name: 'Weekly prayer', time: 'All Friday - 7:00 p.m.' },
+        { name: 'Prayer of Intercession', time: 'Every Friday - 7:00 p.m.' },
         {
           name: 'Sunday Service Preparatory Prayer',
           time: 'All Saturday – 7:00 p.m.',
         },
         { name: 'Friend’s Prayer Group(G-meet)', time: 'All Wednesday - 9:30 p.m.' },
-        { name: 'Choir Practice', time: 'Every Saturday - 5:30 p.m.' },
+        { name: 'Choir Practice', time: 'Every Sunday - 4:00 p.m.' },
       ],
     },
   ];
